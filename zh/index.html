@@ -8,6 +8,32 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+    <!-- 支持多种格式的解压库 -->
+    <script src="https://xenova.github.io/unarchiver.js/dist/unarchiver.min.js"></script>
+    <!-- TAR 文件支持 -->
+    <script src="https://unpkg.com/js-untar@2.0.0/build/dist/untar.min.js"></script>
+    <!-- 添加更好的RAR支持 -->
+    <script>
+        // 预加载unarchiver.js的格式支持
+        window.addEventListener('load', function() {
+            if (typeof Unarchiver !== 'undefined' && Unarchiver.load) {
+                console.log('Loading Unarchiver format support...');
+                Unarchiver.load(['zip', 'rar', 'tar'])
+                    .then(() => console.log('Unarchiver formats loaded successfully'))
+                    .catch(error => console.warn('Failed to load some Unarchiver formats:', error));
+            } else {
+                // 如果没有Unarchiver.load方法，尝试延迟加载
+                setTimeout(() => {
+                    if (typeof Unarchiver !== 'undefined' && Unarchiver.load) {
+                        console.log('Delayed loading Unarchiver format support...');
+                        Unarchiver.load(['zip', 'rar', 'tar'])
+                            .then(() => console.log('Delayed Unarchiver formats loaded successfully'))
+                            .catch(error => console.warn('Failed to load some Unarchiver formats (delayed):', error));
+                    }
+                }, 2000);
+            }
+        });
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="canonical" href="https://unziponline.org/zh/" />
@@ -138,9 +164,9 @@
                 <p class="text-lg opacity-90">直接在浏览器中解压多种格式文件 - 无需上传文件，无需注册</p>
                 <div class="mt-4 flex justify-center flex-wrap">
                     <span class="format-badge text-white"><i class="fas fa-file-archive"></i>ZIP</span>
-                    <span class="format-badge text-white"><i class="fas fa-file-archive"></i>7Z</span>
                     <span class="format-badge text-white"><i class="fas fa-file-archive"></i>RAR</span>
                     <span class="format-badge text-white"><i class="fas fa-file-archive"></i>TAR</span>
+                    <span class="format-badge text-white"><i class="fas fa-file-archive"></i>GZ</span>
                 </div>
             </header>
             
@@ -152,11 +178,11 @@
                         <i class="fas fa-cloud-upload-alt"></i>
                     </div>
                     <h2 class="text-2xl font-semibold text-primary-600 mb-4">拖放压缩文件到此处进行在线解压</h2>
-                    <p class="mb-5 text-gray-600">支持格式：ZIP、7Z、RAR、TAR</p>
+                    <p class="mb-5 text-gray-600">支持格式：ZIP、RAR、TAR、GZ</p>
                     <button id="selectFileBtn" class="bg-gradient-to-r from-primary-500 to-blue-400 text-white px-8 py-3 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 active:translate-y-0">
                         <i class="fas fa-folder-open mr-2"></i>选择压缩文件
                     </button>
-                    <input type="file" id="fileInput" accept=".zip,.7z,.rar,.tar" class="hidden">
+                    <input type="file" id="fileInput" accept=".zip,.rar,.tar,.gz" class="hidden">
                     <div id="uploadStatus" class="mt-4 text-sm"></div>
                 </div>
                 
@@ -213,7 +239,7 @@
                         <span class="text-white text-xl font-bold">1</span>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-800 mb-3">上传ZIP文件</h3>
-                    <p class="text-gray-600">拖放您的压缩文件或点击选择文件。支持ZIP、7Z、RAR、TAR格式。</p>
+                    <p class="text-gray-600">拖放您的压缩文件或点击选择文件。支持ZIP、RAR、TAR、GZ格式。</p>
                 </div>
                 
                 <div class="text-center feature-card">
@@ -251,7 +277,7 @@
                         <i class="fas fa-bolt"></i>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-800 mb-3">极速解压</h3>
-                    <p class="text-gray-600">使用我们优化的在线解压工具瞬间解压ZIP、7Z、RAR、TAR文件。无需等待，无服务器延迟。</p>
+                    <p class="text-gray-600">使用我们优化的在线解压工具瞬间解压ZIP、RAR、TAR、GZ文件。无需等待，无服务器延迟。</p>
                 </div>
                 
                 <div class="bg-white p-6 rounded-xl shadow-md feature-card">
@@ -350,7 +376,7 @@
                             <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
                         </summary>
                         <div class="mt-4 text-gray-600">
-                            <p>我们的在线解压工具使用先进的JavaScript库直接在您的浏览器中处理ZIP、7Z、RAR和TAR文件。当您上传压缩文件时，它会在本地读取并使用客户端技术解压。这意味着您的文件永远不会离开您的设备，确保完全的隐私和安全。解压过程完全在您的浏览器中进行，是解压文件最安全的方式之一。</p>
+                            <p>我们的在线解压工具使用先进的JavaScript库直接在您的浏览器中处理ZIP、RAR、TAR和GZ文件。当您上传压缩文件时，它会在本地读取并使用客户端技术解压。这意味着您的文件永远不会离开您的设备，确保完全的隐私和安全。解压过程完全在您的浏览器中进行，是解压文件最安全的方式之一。</p>
                         </div>
                     </details>
                 </div>
@@ -382,7 +408,7 @@
                             <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
                         </summary>
                         <div class="mt-4 text-gray-600">
-                            <p>我们的在线解压工具支持所有标准压缩文件格式，包括ZIP、7Z、RAR和TAR。您可以解压各种文件类型，包括：</p>
+                            <p>我们的在线解压工具支持所有标准压缩文件格式，包括ZIP、RAR、TAR和GZ。您可以解压各种文件类型，包括：</p>
                             <ul class="list-disc list-inside mt-2 space-y-1">
                                 <li>文档（PDF, DOC, DOCX, TXT）</li>
                                 <li>图片（JPG, PNG, GIF, BMP）</li>
@@ -497,7 +523,6 @@
             const fileCount = document.getElementById('fileCount');
             const uploadStatus = document.getElementById('uploadStatus');
             
-            let zip = null;
             let extractedFiles = [];
             
             // 点击按钮触发文件选择
@@ -563,12 +588,20 @@
                 const file = files[0];
                 
                 // 获取文件扩展名
-                const extension = file.name.split('.').pop().toLowerCase();
+                let extension = file.name.split('.').pop().toLowerCase();
                 
-                // 检查文件类型
-                const allowedExtensions = ['zip', '7z', 'rar', 'tar'];
+                // 检查文件类型并处理复合扩展名
+                if (file.name.toLowerCase().endsWith('.tar.gz')) {
+                    extension = 'tar';
+                } else if (file.name.toLowerCase().endsWith('.tar.bz2')) {
+                    extension = 'tar';
+                } else if (file.name.toLowerCase().endsWith('.tar.xz')) {
+                    extension = 'tar';
+                }
+                
+                const allowedExtensions = ['zip', 'rar', 'tar', 'gz'];
                 if (!allowedExtensions.includes(extension)) {
-                    showStatus('错误：请选择ZIP、7Z、RAR或TAR文件！', 'error');
+                    showStatus('错误：请选择ZIP、RAR、TAR或GZ文件！', 'error');
                     uploadStatus.textContent = "错误：请选择支持的压缩文件格式！";
                     uploadStatus.className = "mt-4 text-sm text-red-500";
                     return;
@@ -592,38 +625,60 @@
                 // 使用FileReader读取文件
                 const reader = new FileReader();
                 
-                reader.onload = function(e) {
+                reader.onload = async function(e) {
                     const data = e.target.result;
                     
-                    // 显示处理进度
-                    updateProgress(20);
-                    showStatus('正在读取压缩文件...');
-                    
-                    // 模拟处理不同格式的文件
-                    setTimeout(() => {
-                        updateProgress(50);
-                        showStatus('正在解压文件...');
+                    try {
+                        // 显示处理进度
+                        updateProgress(20);
+                        showStatus('正在读取压缩文件...');
                         
-                        // 模拟提取文件（实际应用中需根据格式调用相应库）
-                        setTimeout(() => {
-                            // 生成模拟提取的文件
-                            extractedFiles = generateSampleFiles(extension);
-                            
-                            // 更新UI
-                            updateProgress(100);
-                            showStatus('解压完成！');
-                            downloadAllBtn.disabled = false;
-                            
-                            // 显示文件列表
-                            fileListContent.innerHTML = '';
-                            extractedFiles.forEach((file, index) => {
-                                addFileToList(file, index+1);
-                            });
-                            fileList.classList.remove('hidden');
-                            fileCount.textContent = `${extractedFiles.length} 个文件`;
-                            
-                        }, 1500);
-                    }, 1000);
+                        // 根据文件格式选择不同的解压方法
+                        updateProgress(40);
+                        showStatus('正在打开压缩文件...');
+                        
+                        extractedFiles = [];
+                        
+                        if (extension === 'zip') {
+                            await extractZip(data);
+                        } else if (extension === 'rar') {
+                            await extractRar(data, file.name);
+                        } else if (extension === 'tar') {
+                            await extractTar(data);
+                        } else if (extension === 'gz') {
+                            await extractGz(data, file.name);
+                        } else {
+                            throw new Error('不支持的压缩文件格式: ' + extension);
+                        }
+                        
+                        // 更新UI
+                        updateProgress(100);
+                        showStatus('解压完成！');
+                        downloadAllBtn.disabled = false;
+                        
+                        // 显示文件列表
+                        fileListContent.innerHTML = '';
+                        extractedFiles.forEach((file, index) => {
+                            addFileToList(file, index+1);
+                        });
+                        fileList.classList.remove('hidden');
+                        fileCount.textContent = `${extractedFiles.length} 个文件`;
+                        
+                    } catch (error) {
+                        console.error('解压错误:', error);
+                        
+                        // 提供更详细的错误信息
+                        let errorMessage = '解压失败';
+                        if (extension === 'rar') {
+                            errorMessage = 'RAR解压失败。可能的原因：文件已加密、RAR格式较新或文件已损坏。';
+                        } else {
+                            errorMessage = error.message || '未知解压错误';
+                        }
+                        
+                        showStatus('错误：' + errorMessage, 'error');
+                        uploadStatus.textContent = "错误：" + errorMessage;
+                        uploadStatus.className = "mt-4 text-sm text-red-500";
+                    }
                 };
                 
                 reader.onerror = function() {
@@ -633,31 +688,184 @@
                 reader.readAsArrayBuffer(file);
             }
             
-            // 生成示例文件（模拟解压结果）
-            function generateSampleFiles(extension) {
-                const sampleFiles = [];
-                const formats = ['jpg', 'png', 'pdf', 'docx', 'xlsx', 'mp3', 'mp4', 'txt'];
+            // ZIP文件解压函数
+            async function extractZip(data) {
+                updateProgress(50);
+                showStatus('正在解压ZIP文件...');
                 
-                // 根据文件类型生成不同数量的文件
-                const fileCount = extension === 'zip' ? 8 : 
-                                  extension === 'rar' ? 6 : 
-                                  extension === '7z' ? 7 : 5;
+                const zip = new JSZip();
+                const zipContent = await zip.loadAsync(data);
                 
-                for (let i = 1; i <= fileCount; i++) {
-                    const format = formats[Math.floor(Math.random() * formats.length)];
-                    const fileName = `file${i}.${format}`;
-                    const fileSize = Math.floor(Math.random() * 5000000) + 100000; // 100KB - 5MB
+                const filePromises = [];
+                zipContent.forEach((relativePath, zipEntry) => {
+                    if (!zipEntry.dir) {
+                        filePromises.push(
+                            zipEntry.async('blob').then(content => {
+                                extractedFiles.push({
+                                    name: relativePath,
+                                    size: zipEntry._data.uncompressedSize,
+                                    type: getMimeType(relativePath.split('.').pop().toLowerCase()),
+                                    content: new File([content], relativePath, { type: getMimeType(relativePath.split('.').pop().toLowerCase()) }),
+                                    lastModified: zipEntry.date || new Date()
+                                });
+                            })
+                        );
+                    }
+                });
+                
+                await Promise.all(filePromises);
+                updateProgress(90);
+            }
+            
+            // RAR文件解压函数
+            async function extractRar(data, fileName) {
+                updateProgress(50);
+                showStatus('正在解压RAR文件...');
+                
+                try {
+                    await extractWithUnarchiver(data, fileName);
+                    updateProgress(90);
+                } catch (error) {
+                    console.error('RAR解压失败:', error);
+                    throw new Error('解压RAR文件失败。RAR文件可能需要特定版本或已加密。错误：' + error.message);
+                }
+            }
+            
+            // TAR文件解压函数
+            async function extractTar(data) {
+                updateProgress(50);
+                showStatus('正在解压TAR文件...');
+                
+                try {
+                    // 检查untar库是否可用
+                    if (typeof untar === 'undefined') {
+                        throw new Error('TAR库未加载');
+                    }
                     
-                    sampleFiles.push({
-                        name: fileName,
-                        size: fileSize,
-                        type: getMimeType(format),
-                        content: new Blob(['Sample content for ' + fileName], { type: getMimeType(format) }),
+                    const files = await untar(data);
+                    
+                    files.forEach(file => {
+                        if (file.buffer && file.buffer.byteLength > 0 && file.name && !file.name.endsWith('/')) {
+                            extractedFiles.push({
+                                name: file.name,
+                                size: file.size || file.buffer.byteLength,
+                                type: getMimeType(file.name.split('.').pop().toLowerCase()),
+                                content: new File([file.buffer], file.name.split('/').pop(), { 
+                                    type: getMimeType(file.name.split('.').pop().toLowerCase()) 
+                                }),
+                                lastModified: file.mtime ? new Date(file.mtime * 1000) : new Date()
+                            });
+                        }
+                    });
+                    updateProgress(90);
+                } catch (error) {
+                    console.warn('js-untar失败，尝试使用unarchiver.js...', error);
+                    await extractWithUnarchiver(data, 'archive.tar');
+                }
+            }
+
+            // GZ文件解压函数
+            async function extractGz(data, fileName) {
+                updateProgress(50);
+                showStatus('正在解压GZ文件...');
+                
+                try {
+                    // 使用pako库解压gzip
+                    const decompressed = pako.inflate(new Uint8Array(data));
+                    
+                    // 去掉.gz扩展名得到原始文件名
+                    const originalName = fileName.replace(/\.gz$/i, '');
+                    
+                    extractedFiles.push({
+                        name: originalName,
+                        size: decompressed.byteLength,
+                        type: getMimeType(originalName.split('.').pop().toLowerCase()),
+                        content: new File([decompressed], originalName, { 
+                            type: getMimeType(originalName.split('.').pop().toLowerCase()) 
+                        }),
                         lastModified: new Date()
                     });
+                    updateProgress(90);
+                } catch (error) {
+                    console.warn('Pako失败，尝试使用unarchiver.js...', error);
+                    await extractWithUnarchiver(data, fileName);
                 }
+            }
+
+            // 使用unarchiver.js进行解压
+            async function extractWithUnarchiver(data, fileName) {
+                updateProgress(60);
+                showStatus('使用通用解压器解压...');
                 
-                return sampleFiles;
+                try {
+                    // 检查Unarchiver是否可用
+                    if (typeof Unarchiver === 'undefined') {
+                        throw new Error('Unarchiver库未加载');
+                    }
+                    
+                    console.log('尝试使用Unarchiver解压:', fileName);
+                    
+                    const fileBlob = new Blob([data]);
+                    const archiveFile = new File([fileBlob], fileName, { 
+                        type: getArchiveMimeType(fileName)
+                    });
+                    
+                    console.log('创建文件对象:', archiveFile.name, archiveFile.size, archiveFile.type);
+                    
+                    // 尝试打开压缩文件
+                    const archive = await Unarchiver.open(archiveFile);
+                    console.log('压缩文件打开成功:', archive);
+                    
+                    if (!archive.entries || archive.entries.length === 0) {
+                        throw new Error('压缩文件中未找到任何条目');
+                    }
+                    
+                    console.log('找到条目:', archive.entries.length);
+                    
+                    // 提取文件
+                    for (let entry of archive.entries) {
+                        console.log('处理条目:', entry.name, '是文件:', entry.is_file);
+                        
+                        if (entry.is_file && entry.name && entry.name.trim() !== '') {
+                            try {
+                                const entryFile = await entry.read();
+                                console.log('成功读取条目:', entry.name, entryFile.size);
+                                
+                                extractedFiles.push({
+                                    name: entry.name,
+                                    size: entry.size_uncompressed || entryFile.size,
+                                    type: entryFile.type || getMimeType(entry.name.split('.').pop().toLowerCase()),
+                                    content: entryFile,
+                                    lastModified: new Date()
+                                });
+                            } catch (entryError) {
+                                console.warn('读取条目失败:', entry.name, entryError);
+                            }
+                        }
+                    }
+                    
+                    if (extractedFiles.length === 0) {
+                        throw new Error('无法从压缩文件中提取任何有效文件');
+                    }
+                    
+                    updateProgress(90);
+                    console.log('成功解压', extractedFiles.length, '个文件');
+                } catch (error) {
+                    console.error('Unarchiver解压失败:', error);
+                    throw error;
+                }
+            }
+            
+            // 获取压缩文件的MIME类型
+            function getArchiveMimeType(fileName) {
+                const extension = fileName.split('.').pop().toLowerCase();
+                const mimeTypes = {
+                    'zip': 'application/zip',
+                    'rar': 'application/vnd.rar',
+                    'tar': 'application/x-tar',
+                    'gz': 'application/gzip'
+                };
+                return mimeTypes[extension] || 'application/octet-stream';
             }
             
             // 获取MIME类型
@@ -722,7 +930,15 @@
             // 下载单个文件
             function downloadFile(file) {
                 showStatus(`正在下载：${file.name}...`);
-                saveAs(file.content, file.name);
+                // 使用File对象直接下载
+                const url = URL.createObjectURL(file.content);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = file.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
                 setTimeout(() => {
                     showStatus(`下载完成：${file.name}`);
                 }, 1000);
@@ -736,21 +952,40 @@
                 downloadAllBtn.disabled = true;
                 
                 // 创建新的ZIP文件
-                const newZip = new JSZip();
+                const zip = new JSZip();
                 
                 // 添加所有文件到新ZIP
                 extractedFiles.forEach(file => {
-                    newZip.file(file.name, file.content);
+                    zip.file(file.name, file.content);
                 });
                 
+                // 模拟打包过程
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 5;
+                    if (progress > 95) progress = 95;
+                    updateProgress(progress);
+                }, 100);
+                
                 // 生成ZIP文件
-                newZip.generateAsync({type: 'blob'}, function(metadata) {
+                zip.generateAsync({type: 'blob'}, function(metadata) {
                     progressBar.style.width = metadata.percent.toFixed(2) + '%';
                     progressText.textContent = metadata.percent.toFixed(2) + '%';
                 })
                 .then(function(content) {
+                    clearInterval(interval);
+                    updateProgress(100);
+                    
                     // 下载ZIP文件
-                    saveAs(content, '已解压文件.zip');
+                    const url = URL.createObjectURL(content);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = '已解压文件.zip';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
                     showStatus('打包完成！文件已下载。');
                     downloadAllBtn.disabled = false;
                 });
