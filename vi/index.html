@@ -1,25 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unzip Online - Free ZIP File Extractor Tool</title>
-    <meta name="description" content="Unzip Online instantly! Extract files from ZIP, RAR, TAR, GZ archives FREE. No installs, no sign-ups. Drag & drop your ZIP file to open, view, & download contents securely in seconds. Works on any device. Try now!">
-    
-
+    <title>Giải nén trực tuyến miễn phí - Công cụ giải nén ZIP, RAR, 7Z, TAR an toàn | UnzipOnline</title>
+    <meta name="description" content="Giải nén trực tuyến miễn phí các tệp ZIP, RAR, 7Z, TAR ngay trên trình duyệt. Không cần tải xuống phần mềm, bảo mật tuyệt đối, xử lý cục bộ. Công cụ giải nén trực tuyến tốt nhất 2025.">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
     <!-- 支持多种格式的解压库 -->
     <script src="https://xenova.github.io/unarchiver.js/dist/unarchiver.min.js"></script>
+    <script src="https://unziponline.org/js/tailwindcss.js"></script>
+
     <!-- TAR 文件支持 -->
-
-    <script src="js/tailwindcss.js"></script>
-
-   
     <!-- 添加更好的RAR支持 -->
     <script>
-        // 预加载unarchiver.js的格式支持
+        // Preload unarchiver.js format support
         window.addEventListener('load', function() {
             if (typeof Unarchiver !== 'undefined' && Unarchiver.load) {
                 console.log('Loading Unarchiver format support...');
@@ -27,7 +23,7 @@
                     .then(() => console.log('Unarchiver formats loaded successfully'))
                     .catch(error => console.warn('Failed to load some Unarchiver formats:', error));
             } else {
-                // 如果没有Unarchiver.load方法，尝试延迟加载
+                // If no Unarchiver.load method, try delayed loading
                 setTimeout(() => {
                     if (typeof Unarchiver !== 'undefined' && Unarchiver.load) {
                         console.log('Delayed loading Unarchiver format support...');
@@ -40,14 +36,15 @@
         });
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="canonical" href="https://unziponline.org/" />
-    <link rel="icon" href="icon.png" type="image/x-icon" />
+    <link rel="canonical" href="https://unziponline.org/vi/" />
+    <link rel="icon" href="../icon.png" type="image/x-icon" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-186D48K68L"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
+
     gtag('config', 'G-186D48K68L');
     </script>
     <script>
@@ -71,9 +68,28 @@
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        .file-card {
+            transition: all 0.3s ease;
+        }
+        .file-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .feature-card {
+            transition: transform 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .glow-on-hover {
+            transition: box-shadow 0.3s ease;
+        }
+        .glow-on-hover:hover {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
         }
         .format-badge {
             display: inline-flex;
@@ -90,24 +106,18 @@
         .format-badge i {
             margin-right: 5px;
         }
-        .file-card {
-            transition: all 0.3s ease;
-            border-radius: 12px;
-        }
-        .file-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
         .progress-pulse {
             animation: pulse 2s infinite;
         }
-        @keyframes pulse {
-            0% { opacity: 0.8; }
-            50% { opacity: 0.4; }
-            100% { opacity: 0.8; }
-        }
         .floating {
             animation: float 3s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
         @keyframes float {
             0% { transform: translateY(0px); }
@@ -125,18 +135,17 @@
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <i class="fas fa-file-archive text-2xl text-primary-600 mr-3"></i>
-                        <a href="#" class="text-2xl font-bold">Unzip Online</a>
+                        <a href="#" class="text-2xl font-bold">UnzipOnline</a>
                     </div>
                 </div>
                 
-                <!-- Right side -->
+                <!-- Navigation Links -->
                 <div class="flex items-center space-x-4">
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="https://unziponline.org/unzip-tar-gz" target="_blank" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">unzip tar gz</a>
-                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">About</a>
-                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Help</a>
-                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Về chúng tôi</a>
+                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Hướng dẫn</a>
+                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Liên hệ</a>
                         </div>
                     </div>
                 </div>
@@ -150,37 +159,37 @@
             <!-- Header -->
             <header class="bg-gradient-to-r from-primary-600 to-blue-400 text-white p-8 text-center">
                 <h1 class="text-4xl font-bold mb-3">
-                    <i class="fas fa-file-archive mr-3"></i>Unzip Online Free
+                    <i class="fas fa-file-archive mr-3"></i>Giải nén trực tuyến miễn phí
                 </h1>
-                <p class="text-lg opacity-90">Extract ZIP files online directly in your browser</p>
+                <p class="text-lg opacity-90">Công cụ giải nén trực tuyến miễn phí hàng đầu - Xử lý ZIP, RAR, 7Z, TAR ngay trên trình duyệt của bạn</p>
                 <div class="mt-4 flex justify-center flex-wrap">
                     <span class="format-badge text-white"><i class="fas fa-file-archive"></i>ZIP</span>
                     <span class="format-badge text-white"><i class="fas fa-file-archive"></i>RAR</span>
+                    <span class="format-badge text-white"><i class="fas fa-file-archive"></i>7Z</span>
                     <span class="format-badge text-white"><i class="fas fa-file-archive"></i>TAR</span>
-                    <span class="format-badge text-white"><i class="fas fa-file-archive"></i>GZ</span>
                 </div>
             </header>
             
-            <!-- Content -->
+            <!-- Content Area -->
             <div class="p-8">
-                <!-- Upload Container -->
-                <div id="dropArea" class="border-3 border-dashed border-primary-500 rounded-2xl p-10 text-center bg-primary-50/50 transition-all duration-300 mb-8 hover:bg-primary-50 hover:-translate-y-1">
+                <!-- File Upload Area -->
+                <div id="dropArea" class="border-3 border-dashed border-primary-500 rounded-2xl p-10 text-center bg-primary-50/50 transition-all duration-300 mb-8 hover:bg-primary-50 hover:-translate-y-1 glow-on-hover">
                     <div class="text-6xl text-primary-500 mb-4 floating">
                         <i class="fas fa-cloud-upload-alt"></i>
                     </div>
-                    <h2 class="text-2xl font-semibold text-primary-600 mb-4">Drop archive files here to extract online</h2>
-                    <p class="mb-5 text-gray-600">Supported formats: ZIP, RAR, TAR, GZ</p>
+                    <h2 class="text-2xl font-semibold text-primary-600 mb-4">Kéo thả tệp nén vào đây để giải nén trực tuyến miễn phí</h2>
+                    <p class="mb-5 text-gray-600">Hỗ trợ định dạng: ZIP, RAR, 7Z, TAR, GZ - Giải nén trực tuyến an toàn và nhanh chóng</p>
                     <button id="selectFileBtn" class="bg-gradient-to-r from-primary-500 to-blue-400 text-white px-8 py-3 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 active:translate-y-0">
-                        <i class="fas fa-folder-open mr-2"></i>Select Archive File
+                        <i class="fas fa-folder-open mr-2"></i>Chọn tệp nén
                     </button>
-                    <input type="file" id="fileInput" accept=".zip,.rar,.tar,.gz" class="hidden">
+                    <input type="file" id="fileInput" accept=".zip,.rar,.7z,.tar,.gz" class="hidden">
                     <div id="uploadStatus" class="mt-4 text-sm"></div>
                 </div>
                 
-                <!-- Progress Container -->
+                <!-- Progress Bar -->
                 <div id="progressContainer" class="mb-8 hidden">
                     <div class="flex justify-between items-center mb-3">
-                        <span class="font-semibold text-primary-600">Extraction Progress</span>
+                        <span class="font-semibold text-primary-600">Tiến trình giải nén</span>
                         <span id="progressText" class="font-semibold text-primary-600">0%</span>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-5 overflow-hidden">
@@ -190,19 +199,19 @@
                 
                 <!-- Status Text -->
                 <div id="statusText" class="text-center py-4 text-lg font-medium text-primary-600">
-                    Ready to extract files...
+                    Sẵn sàng giải nén tệp của bạn...
                 </div>
                 
                 <!-- File List -->
                 <div id="fileList" class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8 hidden">
                     <div class="bg-gradient-to-r from-primary-500 to-blue-400 text-white p-4 flex justify-between items-center">
-                        <div class="font-semibold">Extracted Files</div>
-                        <div id="fileCount" class="bg-white/20 px-3 py-1 rounded-full text-sm">0 files</div>
+                        <div class="font-semibold">Tệp đã giải nén</div>
+                        <div id="fileCount" class="bg-white/20 px-3 py-1 rounded-full text-sm">0 tệp</div>
                     </div>
                     <div id="fileListContent" class="max-h-80 overflow-y-auto">
                         <div class="text-center py-12 text-gray-500">
                             <i class="fas fa-inbox text-5xl mb-4 text-gray-300"></i>
-                            <p>Extracted files will appear here</p>
+                            <p>Tệp đã giải nén sẽ hiển thị tại đây</p>
                         </div>
                     </div>
                 </div>
@@ -210,229 +219,243 @@
                 <!-- Action Buttons -->
                 <div class="flex justify-center gap-5">
                     <button id="downloadAllBtn" disabled class="bg-gradient-to-r from-green-500 to-green-400 text-white px-8 py-3 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
-                        <i class="fas fa-download mr-2"></i>Download All Files
+                        <i class="fas fa-download mr-2"></i>Tải xuống tất cả
                     </button>
                     <button id="resetBtn" class="bg-gradient-to-r from-red-500 to-red-400 text-white px-8 py-3 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 active:translate-y-0">
-                        <i class="fas fa-redo mr-2"></i>Reset
+                        <i class="fas fa-redo mr-2"></i>Làm mới
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- How-to Guide Section -->
     <div class="bg-gray-50 my-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- How It Works -->
         <div class="p-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">How to Unzip Online</h2>
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Hướng dẫn sử dụng công cụ giải nén trực tuyến miễn phí</h2>
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="text-center">
+                <div class="text-center feature-card">
                     <div class="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
                         <span class="text-white text-xl font-bold">1</span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Upload Archive File</h3>
-                    <p class="text-gray-600">Drag and drop your ZIP, RAR or TAR file or click to select.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Tải lên tệp nén</h3>
+                    <p class="text-gray-600">Kéo thả tệp nén của bạn hoặc nhấn chọn tệp. Giải nén trực tuyến miễn phí hỗ trợ ZIP, RAR, 7Z, TAR và nhiều định dạng khác.</p>
                 </div>
                 
-                <div class="text-center">
+                <div class="text-center feature-card">
                     <div class="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
                         <span class="text-white text-xl font-bold">2</span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Extract Online</h3>
-                    <p class="text-gray-600">Watch as our unzip online tool processes your file in real-time. All extraction happens securely in your browser.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Giải nén tự động</h3>
+                    <p class="text-gray-600">Công cụ giải nén trực tuyến miễn phí của chúng tôi sẽ xử lý tệp ngay trên trình duyệt. Tất cả đều diễn ra cục bộ, đảm bảo an toàn tuyệt đối.</p>
                 </div>
                 
-                <div class="text-center">
+                <div class="text-center feature-card">
                     <div class="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
                         <span class="text-white text-xl font-bold">3</span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Download Files</h3>
-                    <p class="text-gray-600">Download individual files or the complete archive. Our unzip online service is completely free and secure.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Tải xuống kết quả</h3>
+                    <p class="text-gray-600">Tải xuống từng tệp riêng lẻ hoặc tất cả cùng lúc. Giải nén trực tuyến miễn phí hoàn toàn không giới hạn và không cần đăng ký.</p>
                 </div>
             </div>
         </div>
 
         <!-- Features Section -->
         <div class="bg-gray-50 p-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Why Choose Our Unzip Online Tool?</h2>
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Tại sao chọn công cụ giải nén trực tuyến miễn phí của chúng tôi?</h2>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-xl shadow-md file-card">
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
                     <div class="text-3xl text-primary-500 mb-4">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">100% Secure</h3>
-                    <p class="text-gray-600">All unzip online processing happens in your browser. Files never leave your device, ensuring complete privacy and security.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Bảo mật tuyệt đối</h3>
+                    <p class="text-gray-600">Giải nén trực tuyến miễn phí với xử lý hoàn toàn cục bộ. Tệp không bao giờ rời khỏi thiết bị của bạn, đảm bảo quyền riêng tư và bảo mật cao nhất.</p>
                 </div>
                 
-                <div class="bg-white p-6 rounded-xl shadow-md file-card">
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
                     <div class="text-3xl text-primary-500 mb-4">
                         <i class="fas fa-bolt"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Lightning Fast</h3>
-                    <p class="text-gray-600">Extract archive files online instantly with our optimized unzip online tool. No waiting, no server delays.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Tốc độ lightning</h3>
+                    <p class="text-gray-600">Công cụ giải nén trực tuyến miễn phí xử lý siêu nhanh ZIP, RAR, 7Z, TAR. Không cần chờ đợi, không có độ trễ máy chủ.</p>
                 </div>
                 
-                <div class="bg-white p-6 rounded-xl shadow-md file-card">
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
                     <div class="text-3xl text-primary-500 mb-4">
                         <i class="fas fa-mobile-alt"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Works Everywhere</h3>
-                    <p class="text-gray-600">Use our unzip online tool on any device - desktop, tablet, or mobile. No software installation required.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Đa nền tảng</h3>
+                    <p class="text-gray-600">Sử dụng giải nén trực tuyến miễn phí trên mọi thiết bị - máy tính, tablet, điện thoại. Không cần cài đặt phần mềm.</p>
                 </div>
                 
-                <div class="bg-white p-6 rounded-xl shadow-md file-card">
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
                     <div class="text-3xl text-primary-500 mb-4">
                         <i class="fas fa-infinity"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Unlimited Use</h3>
-                    <p class="text-gray-600">Extract as many archive files online as you need. No file limits, no registration, completely free unzip online service.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Không giới hạn</h3>
+                    <p class="text-gray-600">Giải nén trực tuyến miễn phí không giới hạn số lượng tệp. Không cần đăng ký, hoàn toàn miễn phí vĩnh viễn.</p>
                 </div>
                 
-                <div class="bg-white p-6 rounded-xl shadow-md file-card">
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
                     <div class="text-3xl text-primary-500 mb-4">
                         <i class="fas fa-file-archive"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Large File Support</h3>
-                    <p class="text-gray-600">Our unzip online tool handles large ZIP files. Perfect for extracting big archives online.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Hỗ trợ đa định dạng</h3>
+                    <p class="text-gray-600">Giải nén trực tuyến miễn phí hỗ trợ ZIP, RAR, 7Z, TAR, GZ và nhiều định dạng phổ biến khác. Công cụ giải nén toàn diện nhất.</p>
                 </div>
                 
-                <div class="bg-white p-6 rounded-xl shadow-md file-card">
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
                     <div class="text-3xl text-primary-500 mb-4">
                         <i class="fas fa-download"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Easy Downloads</h3>
-                    <p class="text-gray-600">Download individual files or the entire extracted archive. Our unzip online tool makes file management simple.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Tải xuống linh hoạt</h3>
+                    <p class="text-gray-600">Tải từng tệp riêng lẻ hoặc tất cả cùng lúc. Giải nén trực tuyến miễn phí mang đến trải nghiệm quản lý tệp tối ưu.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Benefits Section -->
+        <!-- Comparison Section -->
         <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Benefits of Using Unzip Online</h2>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div>
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Privacy & Security</h3>
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span>No file uploads to external servers</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span>All processing happens locally in your browser</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span>No registration or personal information required</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span>Files are automatically deleted after processing</span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Convenience & Speed</h3>
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span>Instant unzip online without waiting</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span>Works on any device with a web browser</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span>No software installation required</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span>Supports large archive files</span>
-                        </li>
-                    </ul>
-                </div>
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">So sánh giải nén trực tuyến miễn phí với các giải pháp khác</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full bg-white rounded-lg shadow-lg">
+                    <thead class="bg-primary-500 text-white">
+                        <tr>
+                            <th class="px-6 py-4 text-left">Tính năng</th>
+                            <th class="px-6 py-4 text-center">Giải nén trực tuyến miễn phí</th>
+                            <th class="px-6 py-4 text-center">Phần mềm desktop</th>
+                            <th class="px-6 py-4 text-center">Công cụ online khác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-6 py-4 font-medium">Cần cài đặt</td>
+                            <td class="px-6 py-4 text-center"><i class="fas fa-times text-red-500"></i></td>
+                            <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i></td>
+                            <td class="px-6 py-4 text-center"><i class="fas fa-times text-red-500"></i></td>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <td class="px-6 py-4 font-medium">Bảo mật dữ liệu</td>
+                            <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i> 100%</td>
+                            <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i> Cao</td>
+                            <td class="px-6 py-4 text-center"><i class="fas fa-times text-red-500"></i> Thấp</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 font-medium">Tốc độ xử lý</td>
+                            <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i> Cực nhanh</td>
+                            <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i> Nhanh</td>
+                            <td class="px-6 py-4 text-center"><i class="fas fa-times text-red-500"></i> Chậm</td>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <td class="px-6 py-4 font-medium">Miễn phí</td>
+                            <td class="px-6 py-4 text-center"><i class="fas fa-check text-green-500"></i> Vĩnh viễn</td>
+                            <td class="px-6 py-4 text-center"><i class="fas fa-times text-red-500"></i> Có phí</td>
+                            <td class="px-6 py-4 text-center"><i class="fas fa-minus text-yellow-500"></i> Giới hạn</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         
         <!-- FAQ Section -->
         <div class="p-8 bg-white">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Frequently Asked Questions</h2>
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Câu hỏi thường gặp về giải nén trực tuyến miễn phí</h2>
             <div class="max-w-4xl mx-auto space-y-6">
-                <!-- FAQ Item 1 -->
-                <div class="bg-gray-50 rounded-lg p-6 group">
+                <!-- FAQ 1 -->
+                <div class="bg-gray-50 rounded-lg p-6 group file-card">
                     <details class="group">
                         <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
-                            <h3 class="text-lg font-semibold text-gray-800">How does the unzip online tool work?</h3>
+                            <h3 class="text-lg font-semibold text-gray-800">Giải nén trực tuyến miễn phí có an toàn không?</h3>
                             <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
                         </summary>
                         <div class="mt-4 text-gray-600">
-                            <p>Our unzip online tool uses advanced JavaScript libraries to process ZIP, 7Z, RAR and TAR files directly in your browser. When you upload an archive file, it's read locally and extracted using client-side technology. This means your files never leave your device, ensuring complete privacy and security. The extraction process happens entirely in your browser, making it one of the safest ways to unzip files online.</p>
-                        </div>
-                    </details>
-                </div>
-                
-                <!-- FAQ Item 2 -->
-                <div class="bg-gray-50 rounded-lg p-6 group">
-                    <details class="group">
-                        <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
-                            <h3 class="text-lg font-semibold text-gray-800">Is it safe to use unzip online tools?</h3>
-                            <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
-                        </summary>
-                        <div class="mt-4 text-gray-600">
-                            <p>Yes, our unzip online tool is completely safe to use. Unlike traditional online ZIP extractors that upload your files to servers, our tool processes everything locally in your browser. This means:</p>
+                            <p>Hoàn toàn an toàn! Công cụ giải nén trực tuyến miễn phí của chúng tôi xử lý tất cả tệp ngay trên trình duyệt của bạn. Tệp không bao giờ được tải lên máy chủ hay rời khỏi thiết bị của bạn. Đây là cách an toàn nhất để giải nén tệp trực tuyến vì:</p>
                             <ul class="list-disc list-inside mt-2 space-y-1">
-                                <li>Your files never leave your device</li>
-                                <li>No data is stored on external servers</li>
-                                <li>No registration or personal information required</li>
-                                <li>Files are automatically deleted after processing</li>
+                                <li>Xử lý hoàn toàn cục bộ trên trình duyệt</li>
+                                <li>Không lưu trữ dữ liệu trên máy chủ</li>
+                                <li>Không cần đăng ký hay cung cấp thông tin cá nhân</li>
+                                <li>Tệp tự động xóa sau khi xử lý</li>
                             </ul>
                         </div>
                     </details>
                 </div>
                 
-                <!-- FAQ Item 3 -->
-                <div class="bg-gray-50 rounded-lg p-6 group">
+                <!-- FAQ 2 -->
+                <div class="bg-gray-50 rounded-lg p-6 group file-card">
                     <details class="group">
                         <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
-                            <h3 class="text-lg font-semibold text-gray-800">What file types can I extract with unzip online?</h3>
+                            <h3 class="text-lg font-semibold text-gray-800">Công cụ giải nén trực tuyến miễn phí hỗ trợ những định dạng nào?</h3>
                             <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
                         </summary>
                         <div class="mt-4 text-gray-600">
-                            <p>Our unzip online tool supports all standard archive formats including ZIP, 7Z, RAR and TAR. You can extract various file types including:</p>
+                            <p>Giải nén trực tuyến miễn phí hỗ trợ tất cả định dạng nén phổ biến nhất:</p>
                             <ul class="list-disc list-inside mt-2 space-y-1">
-                                <li>Documents (PDF, DOC, DOCX, TXT)</li>
-                                <li>Images (JPG, PNG, GIF, BMP)</li>
-                                <li>Videos (MP4, AVI, MOV)</li>
-                                <li>Audio files (MP3, WAV, FLAC)</li>
-                                <li>And many more file types</li>
+                                <li><strong>ZIP</strong> - Định dạng phổ biến nhất, tương thích mọi hệ điều hành</li>
+                                <li><strong>RAR</strong> - Tỷ lệ nén cao, được sử dụng rộng rãi</li>
+                                <li><strong>7Z</strong> - Định dạng nén hiệu quả của 7-Zip</li>
+                                <li><strong>TAR</strong> - Định dạng phổ biến trên Linux/Unix</li>
+                                <li><strong>GZ</strong> - Tệp gzip thường gặp</li>
+                                <li>Và nhiều định dạng khác...</li>
                             </ul>
                         </div>
                     </details>
                 </div>
                 
-                <!-- FAQ Item 4 -->
-                <div class="bg-gray-50 rounded-lg p-6 group">
+                <!-- FAQ 3 -->
+                <div class="bg-gray-50 rounded-lg p-6 group file-card">
                     <details class="group">
                         <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
-                            <h3 class="text-lg font-semibold text-gray-800">What is the maximum file size for unzip online?</h3>
+                            <h3 class="text-lg font-semibold text-gray-800">Giải nén trực tuyến miễn phí có giới hạn kích thước tệp không?</h3>
                             <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
                         </summary>
                         <div class="mt-4 text-gray-600">
-                            <p>Our unzip online tool supports archive files up to 200MB. This limit ensures optimal performance and browser compatibility. For larger files, we recommend using desktop software or splitting the archive into smaller parts.</p>
+                            <p>Công cụ giải nén trực tuyến miễn phí của chúng tôi có thể xử lý tệp lớn tùy thuộc vào khả năng trình duyệt và thiết bị của bạn. Thông thường:</p>
+                            <ul class="list-disc list-inside mt-2 space-y-1">
+                                <li>Tệp dưới 200MB: Xử lý mượt mà</li>
+                                <li>Tệp 200MB-1GB: Có thể xử lý, tùy thiết bị</li>
+                                <li>Tệp rất lớn: Khuyến nghị sử dụng phần mềm desktop</li>
+                            </ul>
+                            <p class="mt-2">Giải nén trực tuyến miễn phí được tối ưu hóa cho trải nghiệm tốt nhất với hầu hết tệp thông thường.</p>
                         </div>
                     </details>
                 </div>
                 
-                <!-- FAQ Item 5 -->
-                <div class="bg-gray-50 rounded-lg p-6 group">
+                <!-- FAQ 4 -->
+                <div class="bg-gray-50 rounded-lg p-6 group file-card">
                     <details class="group">
                         <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
-                            <h3 class="text-lg font-semibold text-gray-800">Do I need to register to use unzip online?</h3>
+                            <h3 class="text-lg font-semibold text-gray-800">Tại sao nên chọn giải nén trực tuyến miễn phí thay vì phần mềm?</h3>
                             <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
                         </summary>
                         <div class="mt-4 text-gray-600">
-                            <p>No registration is required to use our unzip online tool. You can start extracting archive files immediately without creating an account or providing any personal information. This makes our service completely anonymous and convenient for quick file extraction needs.</p>
+                            <p>Giải nén trực tuyến miễn phí mang lại nhiều lợi ích vượt trội:</p>
+                            <ul class="list-disc list-inside mt-2 space-y-1">
+                                <li><strong>Tiện lợi:</strong> Sử dụng ngay, không cần cài đặt</li>
+                                <li><strong>Đa nền tảng:</strong> Hoạt động mọi thiết bị có trình duyệt</li>
+                                <li><strong>An toàn:</strong> Xử lý cục bộ, không rủi ro malware</li>
+                                <li><strong>Miễn phí:</strong> Hoàn toàn không tốn phí, không quảng cáo</li>
+                                <li><strong>Cập nhật tự động:</strong> Luôn có tính năng mới nhất</li>
+                                <li><strong>Không chiếm dung lượng:</strong> Không cần lưu trữ trên thiết bị</li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="bg-gray-50 rounded-lg p-6 group file-card">
+                    <details class="group">
+                        <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
+                            <h3 class="text-lg font-semibold text-gray-800">Giải nén trực tuyến miễn phí có hỗ trợ tệp có mật khẩu không?</h3>
+                            <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
+                        </summary>
+                        <div class="mt-4 text-gray-600">
+                            <p>Có, công cụ giải nén trực tuyến miễn phí hỗ trợ tệp được bảo vệ bằng mật khẩu. Khi gặp tệp có mật khẩu, hệ thống sẽ yêu cầu bạn nhập mật khẩu để giải nén. Tính năng này hoạt động với:</p>
+                            <ul class="list-disc list-inside mt-2 space-y-1">
+                                <li>Tệp ZIP có mật khẩu</li>
+                                <li>Tệp RAR được bảo vệ</li>
+                                <li>Các định dạng nén khác có mã hóa</li>
+                            </ul>
+                            <p class="mt-2">Mật khẩu được xử lý hoàn toàn cục bộ, đảm bảo bảo mật tuyệt đối.</p>
                         </div>
                     </details>
                 </div>
@@ -448,63 +471,64 @@
                 <div class="col-span-1 md:col-span-2">
                     <div class="flex items-center mb-4">
                         <i class="fas fa-file-archive text-2xl text-primary-400 mr-3"></i>
-                        <h3 class="text-xl font-bold">Unzip Online</h3>
+                        <h3 class="text-xl font-bold">Giải nén trực tuyến miễn phí</h3>
                     </div>
                     <p class="text-gray-300 mb-4">
-                        Secure, fast, and convenient online archive file extraction tool. All file processing happens in your browser to protect your privacy and security.
+                        Công cụ giải nén trực tuyến miễn phí hàng đầu, an toàn và nhanh chóng. Tất cả xử lý diễn ra trên trình duyệt của bạn để bảo vệ quyền riêng tư và bảo mật.
                     </p>
                     <div class="flex space-x-4">
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
                         <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">
                             <i class="fab fa-twitter text-xl"></i>
                         </a>
                         <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">
-                            <i class="fab fa-github text-xl"></i>
-                        </a>
-                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">
-                            <i class="fab fa-linkedin text-xl"></i>
+                            <i class="fab fa-youtube text-xl"></i>
                         </a>
                     </div>
                 </div>
                 
                 <!-- Quick Links -->
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <h4 class="text-lg font-semibold mb-4">Liên kết nhanh</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Home</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">About Us</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Help Guide</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Trang chủ</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Về chúng tôi</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Hướng dẫn sử dụng</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Chính sách bảo mật</a></li>
                     </ul>
                 </div>
                 
                 <!-- Support -->
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">Support</h4>
+                    <h4 class="text-lg font-semibold mb-4">Hỗ trợ</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">FAQ</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Contact Us</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Feedback</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">API Docs</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Câu hỏi thường gặp</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Liên hệ</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Báo lỗi</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Tài liệu API</a></li>
                     </ul>
                 </div>
             </div>
-            
-            <div class="flex space-x-4 flex-wrap justify-center items-center t-12 my-6">
-                <span><a href="https://unziponline.org/">English</a></span><span><a href="https://unziponline.org/zh/">简体中文</a></span>
+
+            <div class="flex space-x-4 flex-wrap justify-center items-center mt-12 mb-6">
+                <span><a href="https://unziponline.org/">English</a></span>
+                <span><a href="https://unziponline.org/zh/">简体中文</a></span>
                 <span><a href="https://unziponline.org/vi/">Tiếng Việt</a></span>
             </div>
-
-            <!-- Bottom Bar -->
+            
+            <!-- Bottom Info -->
             <div class="border-t border-gray-700 pt-8">
                 <div class="flex flex-col md:flex-row justify-between items-center">
                     <div class="text-gray-300 text-sm mb-4 md:mb-0">
-                        <p>© 2025 Unzip Online Tool. All rights reserved.</p>
-                        <p class="mt-1">Note: All file processing happens in your browser and is not uploaded to servers</p>
+                        <p>© 2025 Giải nén trực tuyến miễn phí. Bảo lưu mọi quyền.</p>
+                        <p class="mt-1">Lưu ý: Tất cả xử lý tệp diễn ra trên trình duyệt của bạn, không tải lên máy chủ</p>
                     </div>
                     <div class="flex space-x-6 text-sm">
-                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Privacy Policy</a>
-                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Terms of Service</a>
-                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Cookie Policy</a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Chính sách bảo mật</a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Điều khoản dịch vụ</a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Chính sách Cookie</a>
                     </div>
                 </div>
             </div>
@@ -557,7 +581,7 @@
             
             function highlight() {
                 dropArea.classList.add('bg-primary-100', 'border-primary-600');
-                uploadStatus.textContent = "Release files to upload";
+                uploadStatus.textContent = "Thả tệp để tải lên";
                 uploadStatus.className = "mt-4 text-sm text-primary-600";
             }
             
@@ -605,25 +629,25 @@
                 
                 const allowedExtensions = ['zip', 'rar', 'tar', 'gz'];
                 if (!allowedExtensions.includes(extension)) {
-                    showStatus('Error: Please select a ZIP, RAR, TAR or GZ file!', 'error');
-                    uploadStatus.textContent = "Error: Please select a supported archive file!";
+                    showStatus('Lỗi: Vui lòng chọn tệp ZIP, RAR, TAR hoặc GZ!', 'error');
+                    uploadStatus.textContent = "Lỗi: Vui lòng chọn định dạng tệp hỗ trợ!";
                     uploadStatus.className = "mt-4 text-sm text-red-500";
                     return;
                 }
                 
                 // 检查文件大小（最大200MB）
                 if (file.size > 200 * 1024 * 1024) {
-                    showStatus('Error: File too large! Maximum 200MB supported.', 'error');
-                    uploadStatus.textContent = "Error: File too large! Maximum 200MB supported.";
+                    showStatus('Lỗi: Tệp quá lớn! Tối đa 200MB.', 'error');
+                    uploadStatus.textContent = "Lỗi: Tệp quá lớn! Tối đa 200MB.";
                     uploadStatus.className = "mt-4 text-sm text-red-500";
                     return;
                 }
                 
-                uploadStatus.textContent = `Selected: ${file.name} (${formatFileSize(file.size)})`;
+                uploadStatus.textContent = `Đã chọn: ${file.name} (${formatFileSize(file.size)})`;
                 uploadStatus.className = "mt-4 text-sm text-green-600";
                 
                 // 开始处理文件
-                showStatus(`Processing ${extension.toUpperCase()} file...`);
+                showStatus(`Đang xử lý tệp ${extension.toUpperCase()}...`);
                 progressContainer.classList.remove('hidden');
                 
                 // 使用FileReader读取文件
@@ -635,11 +659,11 @@
                     try {
                         // 显示处理进度
                         updateProgress(20);
-                        showStatus('Reading archive file...');
+                        showStatus('Đang đọc tệp nén...');
                         
                         // 根据文件格式选择不同的解压方法
                         updateProgress(40);
-                        showStatus('Opening archive...');
+                        showStatus('Đang mở tệp nén...');
                         
                         extractedFiles = [];
                         
@@ -652,12 +676,12 @@
                         } else if (extension === 'gz') {
                             await extractGz(data, file.name);
                         } else {
-                            throw new Error('Unsupported archive format: ' + extension);
+                            throw new Error('Định dạng tệp không được hỗ trợ: ' + extension);
                         }
                         
                         // 更新UI
                         updateProgress(100);
-                        showStatus('Extraction complete!');
+                        showStatus('Giải nén hoàn tất!');
                         downloadAllBtn.disabled = false;
                         
                         // 显示文件列表
@@ -666,27 +690,27 @@
                             addFileToList(file, index+1);
                         });
                         fileList.classList.remove('hidden');
-                        fileCount.textContent = `${extractedFiles.length} files`;
+                        fileCount.textContent = `${extractedFiles.length} tệp`;
                         
                     } catch (error) {
-                        console.error('Extraction error:', error);
+                        console.error('Lỗi giải nén:', error);
                         
                         // 提供更详细的错误信息
-                        let errorMessage = 'Failed to extract archive';
+                        let errorMessage = 'Giải nén thất bại';
                         if (extension === 'rar') {
-                            errorMessage = 'RAR extraction failed. This could be due to: encryption, newer RAR format, or corrupted file.';
+                            errorMessage = 'Giải nén RAR thất bại. Có thể do tệp đã được mã hóa, định dạng RAR mới hơn hoặc tệp bị hỏng.';
                         } else {
-                            errorMessage = error.message || 'Unknown extraction error';
+                            errorMessage = error.message || 'Lỗi giải nén không xác định';
                         }
                         
-                        showStatus('Error: ' + errorMessage, 'error');
-                        uploadStatus.textContent = "Error: " + errorMessage;
+                        showStatus('Lỗi: ' + errorMessage, 'error');
+                        uploadStatus.textContent = "Lỗi: " + errorMessage;
                         uploadStatus.className = "mt-4 text-sm text-red-500";
                     }
                 };
                 
                 reader.onerror = function() {
-                    showStatus('Error reading file', 'error');
+                    showStatus('Đã xảy ra lỗi khi đọc tệp', 'error');
                 };
                 
                 reader.readAsArrayBuffer(file);
@@ -695,7 +719,7 @@
             // ZIP文件解压函数
             async function extractZip(data) {
                 updateProgress(50);
-                showStatus('Extracting ZIP files...');
+                showStatus('Đang giải nén tệp ZIP...');
                 
                 const zip = new JSZip();
                 const zipContent = await zip.loadAsync(data);
@@ -724,26 +748,26 @@
             // RAR文件解压函数
             async function extractRar(data, fileName) {
                 updateProgress(50);
-                showStatus('Extracting RAR files...');
+                showStatus('Đang giải nén tệp RAR...');
                 
                 try {
                     await extractWithUnarchiver(data, fileName);
                     updateProgress(90);
                 } catch (error) {
-                    console.error('RAR extraction failed:', error);
-                    throw new Error('Failed to extract RAR file. RAR files may require specific versions or may be encrypted. Error: ' + error.message);
+                    console.error('Giải nén RAR thất bại:', error);
+                    throw new Error('Giải nén RAR thất bại. Tệp RAR có thể cần phiên bản đặc biệt hoặc đã được mã hóa. Lỗi: ' + error.message);
                 }
             }
             
             // TAR文件解压函数
             async function extractTar(data) {
                 updateProgress(50);
-                showStatus('Extracting TAR files...');
+                showStatus('Đang giải nén tệp TAR...');
                 
                 try {
                     // 检查untar库是否可用
                     if (typeof untar === 'undefined') {
-                        throw new Error('TAR library not loaded');
+                        throw new Error('Thư viện TAR chưa được tải');
                     }
                     
                     const files = await untar(data);
@@ -763,16 +787,15 @@
                     });
                     updateProgress(90);
                 } catch (error) {
-                    console.warn('js-untar failed, trying unarchiver.js...', error);
+                    console.warn('js-untar thất bại, thử sử dụng unarchiver.js...', error);
                     await extractWithUnarchiver(data, 'archive.tar');
                 }
             }
-            
 
             // GZ文件解压函数
             async function extractGz(data, fileName) {
                 updateProgress(50);
-                showStatus('Extracting GZ files...');
+                showStatus('Đang giải nén tệp GZ...');
                 
                 try {
                     // 使用pako库解压gzip
@@ -792,50 +815,49 @@
                     });
                     updateProgress(90);
                 } catch (error) {
-                    console.warn('Pako failed, trying unarchiver.js...', error);
+                    console.warn('Pako thất bại, thử sử dụng unarchiver.js...', error);
                     await extractWithUnarchiver(data, fileName);
                 }
             }
-            
 
             // 使用unarchiver.js进行解压
             async function extractWithUnarchiver(data, fileName) {
                 updateProgress(60);
-                showStatus('Extracting with universal extractor...');
+                showStatus('Sử dụng giải nén tổng quát...');
                 
                 try {
                     // 检查Unarchiver是否可用
                     if (typeof Unarchiver === 'undefined') {
-                        throw new Error('Unarchiver library not loaded');
+                        throw new Error('Thư viện Unarchiver chưa được tải');
                     }
                     
-                    console.log('Attempting to extract with Unarchiver:', fileName);
+                    console.log('Đang cố gắng giải nén bằng Unarchiver:', fileName);
                     
                     const fileBlob = new Blob([data]);
                     const archiveFile = new File([fileBlob], fileName, { 
                         type: getArchiveMimeType(fileName)
                     });
                     
-                    console.log('Created file object:', archiveFile.name, archiveFile.size, archiveFile.type);
+                    console.log('Tạo đối tượng tệp:', archiveFile.name, archiveFile.size, archiveFile.type);
                     
                     // 尝试打开压缩文件
                     const archive = await Unarchiver.open(archiveFile);
-                    console.log('Archive opened successfully:', archive);
+                    console.log('Mở tệp nén thành công:', archive);
                     
                     if (!archive.entries || archive.entries.length === 0) {
-                        throw new Error('No entries found in archive');
+                        throw new Error('Không tìm thấy bất kỳ mục nào trong tệp nén');
                     }
                     
-                    console.log('Found entries:', archive.entries.length);
+                    console.log('Tìm thấy mục:', archive.entries.length);
                     
                     // 提取文件
                     for (let entry of archive.entries) {
-                        console.log('Processing entry:', entry.name, 'is_file:', entry.is_file);
+                        console.log('Đang xử lý mục:', entry.name, 'là tệp:', entry.is_file);
                         
                         if (entry.is_file && entry.name && entry.name.trim() !== '') {
                             try {
                                 const entryFile = await entry.read();
-                                console.log('Successfully read entry:', entry.name, entryFile.size);
+                                console.log('Đã đọc mục thành công:', entry.name, entryFile.size);
                                 
                                 extractedFiles.push({
                                     name: entry.name,
@@ -845,19 +867,19 @@
                                     lastModified: new Date()
                                 });
                             } catch (entryError) {
-                                console.warn('Failed to read entry:', entry.name, entryError);
+                                console.warn('Đọc mục thất bại:', entry.name, entryError);
                             }
                         }
                     }
                     
                     if (extractedFiles.length === 0) {
-                        throw new Error('No valid files could be extracted from the archive');
+                        throw new Error('Không thể trích xuất bất kỳ tệp hữu ích nào từ tệp nén');
                     }
                     
                     updateProgress(90);
-                    console.log('Successfully extracted', extractedFiles.length, 'files');
+                    console.log('Giải nén thành công', extractedFiles.length, 'tệp');
                 } catch (error) {
-                    console.error('Unarchiver extraction failed:', error);
+                    console.error('Giải nén bằng Unarchiver thất bại:', error);
                     throw error;
                 }
             }
@@ -912,12 +934,12 @@
                         <div class="font-medium truncate">${file.name}</div>
                         <div class="flex text-sm text-gray-500 mt-1">
                             <span class="mr-4">${formatFileSize(file.size)}</span>
-                            <span>${file.name.split('.').pop().toUpperCase()} file</span>
+                            <span>${getFileType(file.name)}</span>
                         </div>
                     </div>
                     <div class="flex gap-2">
                         <button class="bg-primary-500 text-white px-4 py-2 rounded text-sm hover:bg-primary-600 transition-colors duration-200 flex items-center gap-2 download-btn" data-index="${index - 1}">
-                            <i class="fas fa-download"></i> Download
+                            <i class="fas fa-download"></i> Tải xuống
                         </button>
                     </div>
                 `;
@@ -935,7 +957,7 @@
             
             // 下载单个文件
             function downloadFile(file) {
-                showStatus(`Downloading: ${file.name}...`);
+                showStatus(`Đang tải xuống: ${file.name}...`);
                 // 使用File对象直接下载
                 const url = URL.createObjectURL(file.content);
                 const a = document.createElement('a');
@@ -946,7 +968,7 @@
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
                 setTimeout(() => {
-                    showStatus(`Download complete: ${file.name}`);
+                    showStatus(`Tải xuống hoàn tất: ${file.name}`);
                 }, 1000);
             }
             
@@ -954,7 +976,7 @@
             downloadAllBtn.addEventListener('click', function() {
                 if (extractedFiles.length === 0) return;
                 
-                showStatus('Packaging all files...');
+                showStatus('Đang đóng gói tất cả các tệp...');
                 downloadAllBtn.disabled = true;
                 
                 // 创建新的ZIP文件
@@ -986,13 +1008,13 @@
                     const url = URL.createObjectURL(content);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = 'extracted-files.zip';
+                    a.download = 'Đã giải nén tệp.zip';
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
                     URL.revokeObjectURL(url);
                     
-                    showStatus('Packaging complete! Files downloaded.');
+                    showStatus('Đóng gói hoàn tất! Tệp đã được tải xuống.');
                     downloadAllBtn.disabled = false;
                 });
             });
@@ -1018,13 +1040,13 @@
                 fileListContent.innerHTML = `
                     <div class="text-center py-12 text-gray-500">
                         <i class="fas fa-inbox text-5xl mb-4 text-gray-300"></i>
-                        <p>Extracted files will appear here</p>
+                        <p>Đã giải nén tệp sẽ hiển thị tại đây</p>
                     </div>
                 `;
                 
-                fileCount.textContent = '0 files';
+                fileCount.textContent = '0 tệp';
                 
-                showStatus('Ready to extract files...');
+                showStatus('Sẵn sàng giải nén tệp của bạn...');
             });
             
             // 辅助函数：更新进度条
@@ -1078,11 +1100,17 @@
                 return '<i class="fas fa-file"></i>';
             }
             
+            // 辅助函数：获取文件类型
+            function getFileType(filename) {
+                const ext = filename.split('.').pop().toLowerCase();
+                return ext.toUpperCase() + ' tệp';
+            }
+            
             // 辅助函数：格式化文件大小
             function formatFileSize(bytes) {
-                if (bytes === 0) return '0 Bytes';
+                if (bytes === 0) return '0 byte';
                 const k = 1024;
-                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const sizes = ['byte', 'KB', 'MB', 'GB'];
                 const i = Math.floor(Math.log(bytes) / Math.log(k));
                 return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
             }
