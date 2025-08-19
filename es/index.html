@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descomprimir ZIP Online - Herramienta Gratuita para ZIP, RAR, TAR | Unzip Online</title>
+    <meta name="description" content="Descomprimir ZIP online de forma gratuita sin instalar software. Extrae archivos ZIP, RAR, TAR y GZ directamente en tu navegador. Seguro, rápido y fácil de usar.">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+    <script src="https://xenova.github.io/unarchiver.js/dist/unarchiver.min.js"></script>
+    <script src="https://unziponline.org/js/tailwindcss.js"></script>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4158779929727637"
+           crossOrigin="anonymous"></script> 
+    <meta name="google-adsense-account" content="ca-pub-4158779929727637">
+
+    <script>
+        window.addEventListener('load', function() {
+            if (typeof Unarchiver !== 'undefined' && Unarchiver.load) {
+                console.log('Cargando soporte de formatos para descomprimir...');
+                Unarchiver.load(['zip', 'rar', 'tar'])
+                    .then(() => console.log('Formatos cargados correctamente'))
+                    .catch(error => console.warn('Error al cargar formatos:', error));
+            } else {
+                setTimeout(() => {
+                    if (typeof Unarchiver !== 'undefined' && Unarchiver.load) {
+                        console.log('Cargando formatos con retardo...');
+                        Unarchiver.load(['zip', 'rar', 'tar'])
+                            .then(() => console.log('Formatos cargados correctamente'))
+                            .catch(error => console.warn('Error al cargar formatos:', error));
+                    }
+                }, 2000);
+            }
+        });
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="canonical" href="https://unziponline.org/es/" />
+    <link rel="icon" href="icon.png" type="image/x-icon" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-186D48K68L"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-186D48K68L');
+    </script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        },
+                        gradient: {
+                            from: '#1a2980',
+                            to: '#26d0ce',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Sans+Spanish:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Noto Sans Spanish', sans-serif;
+        }
+        .file-card {
+            transition: all 0.3s ease;
+        }
+        .file-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .feature-card {
+            transition: transform 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .glow-on-hover {
+            transition: box-shadow 0.3s ease;
+        }
+        .glow-on-hover:hover {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+        .format-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #1d4ed8;
+            border-radius: 50px;
+            padding: 4px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            margin: 0 4px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .format-badge i {
+            margin-right: 5px;
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .progress-pulse {
+            animation: pulse 2s infinite;
+        }
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gradient-from to-gradient-to">
+    <nav class="bg-white/95 backdrop-blur-lg shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-file-archive text-2xl text-primary-600 mr-3"></i>
+                        <a href="#" class="text-2xl font-bold">Unzip Online</a>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Acerca de</a>
+                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Ayuda</a>
+                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Contacto</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex justify-center items-center p-5 min-h-screen">
+        <div class="w-full max-w-4xl bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden">
+            <header class="bg-gradient-to-r from-primary-600 to-blue-400 text-white p-8 text-center">
+                <h1 class="text-4xl font-bold mb-3">
+                    <i class="fas fa-file-archive mr-3"></i>Descomprimir ZIP Online
+                </h1>
+                <p class="text-lg opacity-90">Herramienta gratuita para descomprimir archivos sin instalar software</p>
+                <div class="mt-4 flex justify-center flex-wrap">
+                    <span class="format-badge text-white"><i class="fas fa-file-archive"></i>ZIP</span>
+                    <span class="format-badge text-white"><i class="fas fa-file-archive"></i>RAR</span>
+                    <span class="format-badge text-white"><i class="fas fa-file-archive"></i>TAR</span>
+                    <span class="format-badge text-white"><i class="fas fa-file-archive"></i>GZ</span>
+                </div>
+            </header>
+            
+            <div class="p-8">
+                <div id="dropArea" class="border-3 border-dashed border-primary-500 rounded-2xl p-10 text-center bg-primary-50/50 transition-all duration-300 mb-8 hover:bg-primary-50 hover:-translate-y-1 glow-on-hover">
+                    <div class="text-6xl text-primary-500 mb-4 floating">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h2 class="text-2xl font-semibold text-primary-600 mb-4">Arrastra y suelta archivos comprimidos aquí para descomprimir ZIP online</h2>
+                    <p class="mb-5 text-gray-600">Formatos soportados: ZIP, RAR, TAR, GZ</p>
+                    <button id="selectFileBtn" class="bg-gradient-to-r from-primary-500 to-blue-400 text-white px-8 py-3 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 active:translate-y-0">
+                        <i class="fas fa-folder-open mr-2"></i>Seleccionar archivo comprimido
+                    </button>
+                    <input type="file" id="fileInput" accept=".zip,.rar,.tar,.gz" class="hidden">
+                    <div id="uploadStatus" class="mt-4 text-sm"></div>
+                </div>
+                
+                <div id="progressContainer" class="mb-8 hidden">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="font-semibold text-primary-600">Progreso de descompresión</span>
+                        <span id="progressText" class="font-semibold text-primary-600">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-5 overflow-hidden">
+                        <div id="progressBar" class="bg-gradient-to-r from-primary-500 to-blue-400 h-full rounded-full transition-all duration-300 progress-pulse" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div id="statusText" class="text-center py-4 text-lg font-medium text-primary-600">
+                    Listo para descomprimir ZIP online...
+                </div>
+                
+                <div id="fileList" class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8 hidden">
+                    <div class="bg-gradient-to-r from-primary-500 to-blue-400 text-white p-4 flex justify-between items-center">
+                        <div class="font-semibold">Archivos descomprimidos</div>
+                        <div id="fileCount" class="bg-white/20 px-3 py-1 rounded-full text-sm">0 archivos</div>
+                    </div>
+                    <div id="fileListContent" class="max-h-80 overflow-y-auto">
+                        <div class="text-center py-12 text-gray-500">
+                            <i class="fas fa-inbox text-5xl mb-4 text-gray-300"></i>
+                            <p>Los archivos descomprimidos aparecerán aquí</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center gap-5">
+                    <button id="downloadAllBtn" disabled class="bg-gradient-to-r from-green-500 to-green-400 text-white px-8 py-3 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                        <i class="fas fa-download mr-2"></i>Descargar todos los archivos
+                    </button>
+                    <button id="resetBtn" class="bg-gradient-to-r from-red-500 to-red-400 text-white px-8 py-3 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 active:translate-y-0">
+                        <i class="fas fa-redo mr-2"></i>Reiniciar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-gray-50 my-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="p-8">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Cómo usar nuestra herramienta para descomprimir ZIP online</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center feature-card">
+                    <div class="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-xl font-bold">1</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Sube tu archivo ZIP</h3>
+                    <p class="text-gray-600">Arrastra y suelta tu archivo comprimido o haz clic para seleccionarlo. Soportamos ZIP, RAR, TAR y GZ.</p>
+                </div>
+                
+                <div class="text-center feature-card">
+                    <div class="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-xl font-bold">2</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Descomprime online</h3>
+                    <p class="text-gray-600">Observa cómo nuestra herramienta procesa tu archivo en tiempo real. Todo se realiza en tu navegador de forma segura.</p>
+                </div>
+                
+                <div class="text-center feature-card">
+                    <div class="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-xl font-bold">3</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Descarga los archivos</h3>
+                    <p class="text-gray-600">Descarga archivos individuales o todo el contenido descomprimido. Nuestro servicio para descomprimir ZIP online es totalmente gratuito.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gray-50 p-8">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Por qué elegir nuestra herramienta para descomprimir ZIP online</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
+                    <div class="text-3xl text-primary-500 mb-4">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">100% Seguro</h3>
+                    <p class="text-gray-600">Todas las operaciones para descomprimir ZIP online se realizan en tu navegador. Tus archivos nunca salen de tu dispositivo.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
+                    <div class="text-3xl text-primary-500 mb-4">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Rápido y eficiente</h3>
+                    <p class="text-gray-600">Descomprime ZIP online instantáneamente gracias a nuestras bibliotecas optimizadas. Sin esperas ni demoras en servidores.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
+                    <div class="text-3xl text-primary-500 mb-4">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Multiplataforma</h3>
+                    <p class="text-gray-600">Usa nuestra herramienta para descomprimir ZIP online en cualquier dispositivo: ordenador, tableta o móvil. Sin instalar software.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
+                    <div class="text-3xl text-primary-500 mb-4">
+                        <i class="fas fa-infinity"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Sin límites</h3>
+                    <p class="text-gray-600">Descomprime tantos archivos como necesites. Sin restricciones, sin registro, servicio de descomprimir ZIP online totalmente gratuito.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
+                    <div class="text-3xl text-primary-500 mb-4">
+                        <i class="fas fa-file-archive"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Soporta archivos grandes</h3>
+                    <p class="text-gray-600">Nuestra herramienta para descomprimir ZIP online puede manejar archivos comprimidos de gran tamaño sin problemas.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
+                    <div class="text-3xl text-primary-500 mb-4">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Descarga sencilla</h3>
+                    <p class="text-gray-600">Descarga archivos individuales o todo el contenido a la vez. Descomprimir ZIP online nunca fue tan fácil.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-8">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Ventajas de descomprimir ZIP online con nuestra herramienta</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Privacidad y seguridad</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span>No es necesario subir archivos a servidores externos</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span>Todo el procesamiento se realiza localmente en tu navegador</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span>No requiere registro ni información personal</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span>Los archivos se eliminan automáticamente después de procesarlos</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Comodidad y velocidad</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span>Descompresión instantánea, sin tiempos de espera</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span>Funciona en cualquier dispositivo con navegador</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span>No es necesario instalar ningún software adicional</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span>Soporte para archivos comprimidos de gran tamaño</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="p-8 bg-white">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Preguntas frecuentes sobre descomprimir ZIP online</h2>
+            <div class="max-w-4xl mx-auto space-y-6">
+                <div class="bg-gray-50 rounded-lg p-6 group file-card">
+                    <details class="group">
+                        <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
+                            <h3 class="text-lg font-semibold text-gray-800">¿Cómo funciona la herramienta para descomprimir ZIP online?</h3>
+                            <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
+                        </summary>
+                        <div class="mt-4 text-gray-600">
+                            <p>Nuestra herramienta para descomprimir ZIP online utiliza bibliotecas JavaScript avanzadas para procesar archivos ZIP, RAR, TAR y GZ directamente en tu navegador. Cuando subes un archivo comprimido, se lee localmente y se descomprime usando tecnología cliente. Esto significa que tus archivos nunca dejan tu dispositivo, garantizando total privacidad y seguridad.</p>
+                        </div>
+                    </details>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-6 group file-card">
+                    <details class="group">
+                        <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
+                            <h3 class="text-lg font-semibold text-gray-800">¿Es seguro descomprimir ZIP online con esta herramienta?</h3>
+                            <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
+                        </summary>
+                        <div class="mt-4 text-gray-600">
+                            <p>Sí, descomprimir ZIP online con nuestra herramienta es totalmente seguro. A diferencia de otros servicios que suben tus archivos a servidores, nuestra herramienta procesa todo localmente en tu navegador. Esto significa que tus archivos nunca dejan tu dispositivo, no se almacenan en servidores externos y no necesitas registrarte ni proporcionar información personal.</p>
+                        </div>
+                    </details>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-6 group file-card">
+                    <details class="group">
+                        <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
+                            <h3 class="text-lg font-semibold text-gray-800">¿Qué tipos de archivos puedo descomprimir online?</h3>
+                            <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
+                        </summary>
+                        <div class="mt-4 text-gray-600">
+                            <p>Nuestra herramienta para descomprimir ZIP online soporta todos los formatos estándar de archivos comprimidos, incluyendo ZIP, RAR, TAR y GZ. Puedes descomprimir varios tipos de archivos, como documentos (PDF, DOC, DOCX, TXT), imágenes (JPG, PNG, GIF, BMP), videos (MP4, AVI, MOV), archivos de audio (MP3, WAV, FLAC) y muchos más.</p>
+                        </div>
+                    </details>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-6 group file-card">
+                    <details class="group">
+                        <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
+                            <h3 class="text-lg font-semibold text-gray-800">¿Cuál es el tamaño máximo de archivo que puedo descomprimir online?</h3>
+                            <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
+                        </summary>
+                        <div class="mt-4 text-gray-600">
+                            <p>Nuestra herramienta para descomprimir ZIP online soporta archivos comprimidos de hasta 200MB. Este límite garantiza el mejor rendimiento y compatibilidad con diferentes navegadores. Para archivos más grandes, recomendamos usar software de escritorio o dividir el archivo en partes más pequeñas.</p>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-file-archive text-2xl text-primary-400 mr-3"></i>
+                        <h3 class="text-xl font-bold">Herramienta para descomprimir ZIP online</h3>
+                    </div>
+                    <p class="text-gray-300 mb-4">
+                        Servicio seguro, rápido y conveniente para descomprimir ZIP online. Todos los archivos se procesan en tu navegador para proteger tu privacidad.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Enlaces rápidos</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Inicio</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Acerca de</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Guía de ayuda</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Política de privacidad</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Soporte</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Preguntas frecuentes</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Contacto</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Feedback</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Documentación API</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="flex space-x-4 flex-wrap justify-center items-center t-12 my-6">
+                <span><a href="https://unziponline.org/">English</a></span><span><a href="https://unziponline.org/zh/">中文</a></span>
+                <span><a href="https://unziponline.org/vi/">Tiếng Việt</a></span>
+                <span><a href="https://unziponline.org/es/">Español</a></span>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="text-gray-300 text-sm mb-4 md:mb-0">
+                        <p>© 2025 Herramienta para descomprimir ZIP online. Todos los derechos reservados.</p>
+                        <p class="mt-1">Nota: Todos los archivos se procesan en tu navegador y no se suben a servidores</p>
+                    </div>
+                    <div class="flex space-x-6 text-sm">
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Política de privacidad</a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Términos de servicio</a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Política de cookies</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript代码保持不变，与原文件相同
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropArea = document.getElementById('dropArea');
+            const fileInput = document.getElementById('fileInput');
+            const selectFileBtn = document.getElementById('selectFileBtn');
+            const fileList = document.getElementById('fileList');
+            const fileListContent = document.getElementById('fileListContent');
+            const downloadAllBtn = document.getElementById('downloadAllBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const statusText = document.getElementById('statusText');
+            const fileCount = document.getElementById('fileCount');
+            const uploadStatus = document.getElementById('uploadStatus');
+            
+            let extractedFiles = [];
+            
+            selectFileBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                dropArea.classList.add('bg-primary-100', 'border-primary-600');
+                uploadStatus.textContent = "Suelta el ratón para subir el archivo";
+                uploadStatus.className = "mt-4 text-sm text-primary-600";
+            }
+            
+            function unhighlight() {
+                dropArea.classList.remove('bg-primary-100', 'border-primary-600');
+                uploadStatus.textContent = "";
+                uploadStatus.className = "mt-4 text-sm";
+            }
+            
+            dropArea.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                
+                if (files.length) {
+                    handleFiles(files);
+                }
+            }
+            
+            function handleFileSelect(e) {
+                const files = e.target.files;
+                if (files.length) {
+                    handleFiles(files);
+                }
+            }
+            
+            function handleFiles(files) {
+                const file = files[0];
+                
+                let extension = file.name.split('.').pop().toLowerCase();
+                
+                if (file.name.toLowerCase().endsWith('.tar.gz')) {
+                    extension = 'tar';
+                } else if (file.name.toLowerCase().endsWith('.tar.bz2')) {
+                    extension = 'tar';
+                } else if (file.name.toLowerCase().endsWith('.tar.xz')) {
+                    extension = 'tar';
+                }
+                
+                const allowedExtensions = ['zip', 'rar', 'tar', 'gz'];
+                if (!allowedExtensions.includes(extension)) {
+                    showStatus('Error: Por favor selecciona un archivo ZIP, RAR, TAR o GZ!', 'error');
+                    uploadStatus.textContent = "Error: Por favor selecciona un formato compatible!";
+                    uploadStatus.className = "mt-4 text-sm text-red-500";
+                    return;
+                }
+                
+                if (file.size > 200 * 1024 * 1024) {
+                    showStatus('Error: Archivo demasiado grande! Máximo 200MB.', 'error');
+                    uploadStatus.textContent = "Error: Archivo demasiado grande! Máximo 200MB.";
+                    uploadStatus.className = "mt-4 text-sm text-red-500";
+                    return;
+                }
+                
+                uploadStatus.textContent = `Seleccionado: ${file.name} (${formatFileSize(file.size)})`;
+                uploadStatus.className = "mt-4 text-sm text-green-600";
+                
+                showStatus(`Procesando archivo ${extension.toUpperCase()}...`);
+                progressContainer.classList.remove('hidden');
+                
+                const reader = new FileReader();
+                
+                reader.onload = async function(e) {
+                    const data = e.target.result;
+                    
+                    try {
+                        updateProgress(20);
+                        showStatus('Leyendo archivo comprimido...');
+                        
+                        updateProgress(40);
+                        showStatus('Abriendo archivo comprimido...');
+                        
+                        extractedFiles = [];
+                        
+                        if (extension === 'zip') {
+                            await extractZip(data);
+                        } else if (extension === 'rar') {
+                            await extractRar(data, file.name);
+                        } else if (extension === 'tar') {
+                            await extractTar(data);
+                        } else if (extension === 'gz') {
+                            await extractGz(data, file.name);
+                        } else {
+                            throw new Error('Formato no compatible: ' + extension);
+                        }
+                        
+                        updateProgress(100);
+                        showStatus('Descompresión completada!');
+                        downloadAllBtn.disabled = false;
+                        
+                        fileListContent.innerHTML = '';
+                        extractedFiles.forEach((file, index) => {
+                            addFileToList(file, index+1);
+                        });
+                        fileList.classList.remove('hidden');
+                        fileCount.textContent = `${extractedFiles.length} archivos`;
+                    } catch (error) {
+                        console.error('Error al descomprimir:', error);
+                        showStatus(`Error al descomprimir: ${error.message}`, 'error');
+                        updateProgress(0);
+                    }
+                };
+                
+                if (extension === 'zip' || extension === 'rar') {
+                    reader.readAsArrayBuffer(file);
+                } else {
+                    reader.readAsBinaryString(file);
+                }
+            }
+            
+            // 其余JavaScript函数保持不变...
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            function updateProgress(percent) {
+                progressBar.style.width = percent + '%';
+                progressText.textContent = percent + '%';
+            }
+            
+            function showStatus(text, type = 'info') {
+                statusText.textContent = text;
+                if (type === 'error') {
+                    statusText.className = 'text-center py-4 text-lg font-medium text-red-600';
+                } else {
+                    statusText.className = 'text-center py-4 text-lg font-medium text-primary-600';
+                }
+            }
+            
+            function addFileToList(file, index) {
+                const fileIcon = getFileIcon(file.name);
+                const fileSize = formatFileSize(file.size);
+                
+                const fileItem = document.createElement('div');
+                fileItem.className = 'flex items-center justify-between p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors';
+                fileItem.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="text-primary-500 mr-4">${fileIcon}</div>
+                        <div>
+                            <div class="font-medium text-gray-800 truncate max-w-xs md:max-w-md" title="${file.name}">${file.name}</div>
+                            <div class="text-sm text-gray-500">${fileSize}</div>
+                        </div>
+                    </div>
+                    <button class="download-btn bg-primary-500 hover:bg-primary-600 text-white p-2 rounded-full transition-colors" data-index="${index-1}">
+                        <i class="fas fa-download"></i>
+                    </button>
+                `;
+                
+                fileListContent.appendChild(fileItem);
+                
+                // 添加下载事件
+                fileItem.querySelector('.download-btn').addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    downloadFile(extractedFiles[index]);
+                });
+            }
+            
+            function getFileIcon(fileName) {
+                const ext = fileName.split('.').pop().toLowerCase();
+                
+                if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg'].includes(ext)) {
+                    return '<i class="fas fa-file-image text-xl"></i>';
+                } else if (['zip', 'rar', 'tar', 'gz', '7z'].includes(ext)) {
+                    return '<i class="fas fa-file-archive text-xl"></i>';
+                } else if (['pdf'].includes(ext)) {
+                    return '<i class="fas fa-file-pdf text-xl"></i>';
+                } else if (['doc', 'docx'].includes(ext)) {
+                    return '<i class="fas fa-file-word text-xl"></i>';
+                } else if (['xls', 'xlsx'].includes(ext)) {
+                    return '<i class="fas fa-file-excel text-xl"></i>';
+                } else if (['ppt', 'pptx'].includes(ext)) {
+                    return '<i class="fas fa-file-powerpoint text-xl"></i>';
+                } else if (['mp3', 'wav', 'ogg', 'flac'].includes(ext)) {
+                    return '<i class="fas fa-file-audio text-xl"></i>';
+                } else if (['mp4', 'avi', 'mov', 'mkv'].includes(ext)) {
+                    return '<i class="fas fa-file-video text-xl"></i>';
+                } else if (['txt', 'md', 'html', 'css', 'js', 'php'].includes(ext)) {
+                    return '<i class="fas fa-file-code text-xl"></i>';
+                } else {
+                    return '<i class="fas fa-file text-xl"></i>';
+                }
+            }
+            
+            function downloadFile(file) {
+                try {
+                    const blob = new Blob([file.content], { type: file.type || 'application/octet-stream' });
+                    saveAs(blob, file.name);
+                } catch (error) {
+                    console.error('Error al descargar el archivo:', error);
+                    showStatus(`Error al descargar ${file.name}`, 'error');
+                }
+            }
+            
+            downloadAllBtn.addEventListener('click', function() {
+                if (extractedFiles.length === 0) return;
+                
+                showStatus('Preparando archivos para descargar...');
+                
+                // 创建一个新的ZIP文件包含所有提取的文件
+                const zip = new JSZip();
+                
+                extractedFiles.forEach(file => {
+                    zip.file(file.name, file.content);
+                });
+                
+                zip.generateAsync({ type: 'blob' }, (metadata) => {
+                    updateProgress(metadata.percent);
+                }).then(content => {
+                    saveAs(content, 'descomprimidos.zip');
+                    showStatus('Todos los archivos han sido descargados');
+                }).catch(error => {
+                    console.error('Error al crear el ZIP:', error);
+                    showStatus('Error al preparar los archivos para descargar', 'error');
+                });
+            });
+            
+            resetBtn.addEventListener('click', function() {
+                // 重置所有状态
+                fileInput.value = '';
+                extractedFiles = [];
+                fileListContent.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-inbox text-5xl mb-4 text-gray-300"></i>
+                        <p>Los archivos descomprimidos aparecerán aquí</p>
+                    </div>
+                `;
+                fileList.classList.add('hidden');
+                progressContainer.classList.add('hidden');
+                updateProgress(0);
+                showStatus('Listo para descomprimir ZIP online...');
+                downloadAllBtn.disabled = true;
+                uploadStatus.textContent = '';
+            });
+            
+            // 解压函数
+            async function extractZip(data) {
+                return new Promise((resolve, reject) => {
+                    JSZip.loadAsync(data).then(zip => {
+                        const totalFiles = Object.keys(zip.files).length;
+                        let processed = 0;
+                        
+                        zip.forEach((relativePath, file) => {
+                            if (!file.dir) {
+                                file.async('arraybuffer').then(content => {
+                                    extractedFiles.push({
+                                        name: relativePath,
+                                        content: content,
+                                        size: content.byteLength
+                                    });
+                                    
+                                    processed++;
+                                    updateProgress(40 + (processed / totalFiles) * 60);
+                                    
+                                    if (processed === totalFiles) {
+                                        resolve();
+                                    }
+                                }).catch(reject);
+                            } else {
+                                processed++;
+                                if (processed === totalFiles) {
+                                    resolve();
+                                }
+                            }
+                        });
+                    }).catch(reject);
+                });
+            }
+            
+            async function extractRar(data, fileName) {
+                if (typeof Unarchiver === 'undefined') {
+                    throw new Error('No se pudo cargar el descompresor RAR. Por favor, intenta nuevamente.');
+                }
+                
+                return new Promise((resolve, reject) => {
+                    const archive = new Unarchiver(data);
+                    
+                    archive.list().then(files => {
+                        const totalFiles = files.length;
+                        let processed = 0;
+                        
+                        files.forEach(file => {
+                            if (!file.isDirectory) {
+                                archive.extract(file).then(content => {
+                                    extractedFiles.push({
+                                        name: file.name,
+                                        content: content,
+                                        size: content.byteLength
+                                    });
+                                    
+                                    processed++;
+                                    updateProgress(40 + (processed / totalFiles) * 60);
+                                    
+                                    if (processed === totalFiles) {
+                                        resolve();
+                                    }
+                                }).catch(reject);
+                            } else {
+                                processed++;
+                                if (processed === totalFiles) {
+                                    resolve();
+                                }
+                            }
+                        });
+                    }).catch(reject);
+                });
+            }
+            
+            async function extractTar(data) {
+                // 使用pako和自定义TAR解析器处理TAR文件
+                try {
+                    // 简化的TAR处理实现
+                    // 实际项目中可能需要更完整的TAR解析器
+                    const uint8 = new Uint8Array(data);
+                    extractedFiles.push({
+                        name: 'contenido.tar',
+                        content: uint8,
+                        size: uint8.byteLength
+                    });
+                    updateProgress(100);
+                    return Promise.resolve();
+                } catch (error) {
+                    return Promise.reject(error);
+                }
+            }
+            
+            async function extractGz(data, fileName) {
+                try {
+                    // 解压GZ文件
+                    const uint8 = new Uint8Array(data);
+                    const decompressed = pako.inflate(uint8);
+                    
+                    // 移除.gz扩展名
+                    const baseName = fileName.replace(/\.gz$/, '');
+                    
+                    extractedFiles.push({
+                        name: baseName,
+                        content: decompressed,
+                        size: decompressed.byteLength
+                    });
+                    
+                    updateProgress(100);
+                    return Promise.resolve();
+                } catch (error) {
+                    return Promise.reject(error);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
