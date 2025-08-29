@@ -1,50 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unzip Online - Free ZIP File Extractor Tool</title>
-    <meta name="description" content="Unzip Online instantly! Extract files from ZIP, RAR, TAR, GZ archives FREE. No installs, no sign-ups. Drag & drop your ZIP file to open, view, & download contents securely in seconds. Works on any device. Try now!">
-    
-
+    <title>Бесплатный онлайн инструмент для распаковки - Поддерживает ZIP, 7Z, RAR, TAR | Unzip Online</title>
+    <meta name="description" content="Без скачивания программ! Бесплатно распаковывайте ZIP, 7Z, RAR, TAR архивы онлайн. Мгновенно извлекайте, просматривайте и скачивайте внутренние файлы. Поддерживает большие файлы, простой и быстрый интерфейс, безопасно и надежно. Работает на компьютере и телефоне, без регистрации и входа в систему, начните сразу!">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
-    <!-- 支持多种格式的解压库 -->
+    <!-- Библиотека для поддержки различных форматов распаковки -->
     <script src="https://xenova.github.io/unarchiver.js/dist/unarchiver.min.js"></script>
-    <!-- TAR 文件支持 -->
-
-    <script src="js/tailwindcss.js"></script>
-
+    <script src="https://unziponline.org/js/tailwindcss.js"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4158779929727637"
-           crossOrigin="anonymous"></script> 
+           crossOrigin="anonymous"></script>
     <meta name="google-adsense-account" content="ca-pub-4158779929727637">
-
-   
-    <!-- 添加更好的RAR支持 -->
+    <!-- Поддержка TAR файлов -->
+    <!-- Лучшая поддержка RAR -->
     <script>
-        // 预加载unarchiver.js的格式支持
+        // Предварительная загрузка поддержки форматов unarchiver.js
         window.addEventListener('load', function() {
             if (typeof Unarchiver !== 'undefined' && Unarchiver.load) {
-                console.log('Loading Unarchiver format support...');
+                console.log('Загрузка поддержки форматов Unarchiver...');
                 Unarchiver.load(['zip', 'rar', 'tar'])
-                    .then(() => console.log('Unarchiver formats loaded successfully'))
-                    .catch(error => console.warn('Failed to load some Unarchiver formats:', error));
+                    .then(() => console.log('Форматы Unarchiver успешно загружены'))
+                    .catch(error => console.warn('Не удалось загрузить некоторые форматы Unarchiver:', error));
             } else {
-                // 如果没有Unarchiver.load方法，尝试延迟加载
+                // Если метод Unarchiver.load отсутствует, попробуйте загрузить с задержкой
                 setTimeout(() => {
                     if (typeof Unarchiver !== 'undefined' && Unarchiver.load) {
-                        console.log('Delayed loading Unarchiver format support...');
+                        console.log('Отложенная загрузка поддержки форматов Unarchiver...');
                         Unarchiver.load(['zip', 'rar', 'tar'])
-                            .then(() => console.log('Delayed Unarchiver formats loaded successfully'))
-                            .catch(error => console.warn('Failed to load some Unarchiver formats (delayed):', error));
+                            .then(() => console.log('Форматы Unarchiver успешно загружены (отложено)'))
+                            .catch(error => console.warn('Не удалось загрузить некоторые форматы Unarchiver (отложено):', error));
                     }
                 }, 2000);
             }
         });
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="canonical" href="https://unziponline.org/" />
+    <link rel="canonical" href="https://unziponline.org/ru/" />
     <link rel="icon" href="icon.png" type="image/x-icon" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-186D48K68L"></script>
@@ -75,9 +69,28 @@
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        .file-card {
+            transition: all 0.3s ease;
+        }
+        .file-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .feature-card {
+            transition: transform 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .glow-on-hover {
+            transition: box-shadow 0.3s ease;
+        }
+        .glow-on-hover:hover {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
         }
         .format-badge {
             display: inline-flex;
@@ -94,24 +107,18 @@
         .format-badge i {
             margin-right: 5px;
         }
-        .file-card {
-            transition: all 0.3s ease;
-            border-radius: 12px;
-        }
-        .file-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
         .progress-pulse {
             animation: pulse 2s infinite;
         }
-        @keyframes pulse {
-            0% { opacity: 0.8; }
-            50% { opacity: 0.4; }
-            100% { opacity: 0.8; }
-        }
         .floating {
             animation: float 3s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
         @keyframes float {
             0% { transform: translateY(0px); }
@@ -121,42 +128,39 @@
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gradient-from to-gradient-to">
-    <!-- Navigation -->
+    <!-- Навигационная панель -->
     <nav class="bg-white/95 backdrop-blur-lg shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
+                <!-- Логотип сайта -->
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <i class="fas fa-file-archive text-2xl text-primary-600 mr-3"></i>
                         <a href="#" class="text-2xl font-bold">Unzip Online</a>
                     </div>
                 </div>
-                
-                <!-- Right side -->
+                <!-- Правая навигация -->
                 <div class="flex items-center space-x-4">
                     <div class="hidden md:block">
                         <div class="ml-10 flex items-baseline space-x-4">
-                            <a href="https://unziponline.org/unzip-tar-gz" target="_blank" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">unzip tar gz</a>
-                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">About</a>
-                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Help</a>
-                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">О нас</a>
+                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Центр помощи</a>
+                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Связаться с нами</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
-
-    <!-- Main Content -->
+    <!-- Основной контент -->
     <div class="flex justify-center items-center p-5 min-h-screen">
         <div class="w-full max-w-4xl bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden">
-            <!-- Header -->
+            <!-- Заголовок -->
             <header class="bg-gradient-to-r from-primary-600 to-blue-400 text-white p-8 text-center">
                 <h1 class="text-4xl font-bold mb-3">
-                    <i class="fas fa-file-archive mr-3"></i>Unzip Online Free
+                    <i class="fas fa-file-archive mr-3"></i>Бесплатный онлайн инструмент для распаковки
                 </h1>
-                <p class="text-lg opacity-90">Extract ZIP files online directly in your browser</p>
+                <p class="text-lg opacity-90">Распаковывайте файлы различных форматов прямо в браузере - без загрузки файлов и регистрации</p>
                 <div class="mt-4 flex justify-center flex-wrap">
                     <span class="format-badge text-white"><i class="fas fa-file-archive"></i>ZIP</span>
                     <span class="format-badge text-white"><i class="fas fa-file-archive"></i>RAR</span>
@@ -164,358 +168,320 @@
                     <span class="format-badge text-white"><i class="fas fa-file-archive"></i>GZ</span>
                 </div>
             </header>
-            
-            <!-- Content -->
+            <!-- Область контента -->
             <div class="p-8">
-                <!-- Upload Container -->
-                <div id="dropArea" class="border-3 border-dashed border-primary-500 rounded-2xl p-10 text-center bg-primary-50/50 transition-all duration-300 mb-8 hover:bg-primary-50 hover:-translate-y-1">
+                <!-- Область загрузки файлов -->
+                <div id="dropArea" class="border-3 border-dashed border-primary-500 rounded-2xl p-10 text-center bg-primary-50/50 transition-all duration-300 mb-8 hover:bg-primary-50 hover:-translate-y-1 glow-on-hover">
                     <div class="text-6xl text-primary-500 mb-4 floating">
                         <i class="fas fa-cloud-upload-alt"></i>
                     </div>
-                    <h2 class="text-2xl font-semibold text-primary-600 mb-4">Drop archive files here to extract online</h2>
-                    <p class="mb-5 text-gray-600">Supported formats: ZIP, RAR, TAR, GZ</p>
+                    <h2 class="text-2xl font-semibold text-primary-600 mb-4">Перетащите сюда архивный файл для онлайн распаковки</h2>
+                    <p class="mb-5 text-gray-600">Поддерживаемые форматы: ZIP, RAR, TAR, GZ</p>
                     <button id="selectFileBtn" class="bg-gradient-to-r from-primary-500 to-blue-400 text-white px-8 py-3 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 active:translate-y-0">
-                        <i class="fas fa-folder-open mr-2"></i>Select Archive File
+                        <i class="fas fa-folder-open mr-2"></i>Выбрать архивный файл
                     </button>
                     <input type="file" id="fileInput" accept=".zip,.rar,.tar,.gz" class="hidden">
                     <div id="uploadStatus" class="mt-4 text-sm"></div>
                 </div>
-                
-                <!-- Progress Container -->
+                <!-- Индикатор выполнения -->
                 <div id="progressContainer" class="mb-8 hidden">
                     <div class="flex justify-between items-center mb-3">
-                        <span class="font-semibold text-primary-600">Extraction Progress</span>
+                        <span class="font-semibold text-primary-600">Прогресс распаковки</span>
                         <span id="progressText" class="font-semibold text-primary-600">0%</span>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-5 overflow-hidden">
                         <div id="progressBar" class="bg-gradient-to-r from-primary-500 to-blue-400 h-full rounded-full transition-all duration-300 progress-pulse" style="width: 0%"></div>
                     </div>
                 </div>
-                
-                <!-- Status Text -->
+                <!-- Статус -->
                 <div id="statusText" class="text-center py-4 text-lg font-medium text-primary-600">
-                    Ready to extract files...
+                    Готов к распаковке файла...
                 </div>
-                
-                <!-- File List -->
+                <!-- Список файлов -->
                 <div id="fileList" class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8 hidden">
                     <div class="bg-gradient-to-r from-primary-500 to-blue-400 text-white p-4 flex justify-between items-center">
-                        <div class="font-semibold">Extracted Files</div>
-                        <div id="fileCount" class="bg-white/20 px-3 py-1 rounded-full text-sm">0 files</div>
+                        <div class="font-semibold">Распакованные файлы</div>
+                        <div id="fileCount" class="bg-white/20 px-3 py-1 rounded-full text-sm">0 файлов</div>
                     </div>
                     <div id="fileListContent" class="max-h-80 overflow-y-auto">
                         <div class="text-center py-12 text-gray-500">
                             <i class="fas fa-inbox text-5xl mb-4 text-gray-300"></i>
-                            <p>Extracted files will appear here</p>
+                            <p>Здесь будут отображаться распакованные файлы</p>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Action Buttons -->
+                <!-- Кнопки действий -->
                 <div class="flex justify-center gap-5">
                     <button id="downloadAllBtn" disabled class="bg-gradient-to-r from-green-500 to-green-400 text-white px-8 py-3 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
-                        <i class="fas fa-download mr-2"></i>Download All Files
+                        <i class="fas fa-download mr-2"></i>Скачать все файлы
                     </button>
                     <button id="resetBtn" class="bg-gradient-to-r from-red-500 to-red-400 text-white px-8 py-3 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 active:translate-y-0">
-                        <i class="fas fa-redo mr-2"></i>Reset
+                        <i class="fas fa-redo mr-2"></i>Сбросить
                     </button>
                 </div>
             </div>
         </div>
     </div>
-
     <div class="bg-gray-50 my-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- How It Works -->
+        <!-- Руководство по использованию -->
         <div class="p-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">How to Unzip Online</h2>
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Как использовать онлайн инструмент для распаковки</h2>
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="text-center">
+                <div class="text-center feature-card">
                     <div class="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
                         <span class="text-white text-xl font-bold">1</span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Upload Archive File</h3>
-                    <p class="text-gray-600">Drag and drop your ZIP, RAR or TAR file or click to select.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Загрузите ZIP файл</h3>
+                    <p class="text-gray-600">Перетащите ваш архивный файл или нажмите, чтобы выбрать файл. Поддерживает форматы ZIP, RAR, TAR, GZ.</p>
                 </div>
-                
-                <div class="text-center">
+                <div class="text-center feature-card">
                     <div class="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
                         <span class="text-white text-xl font-bold">2</span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Extract Online</h3>
-                    <p class="text-gray-600">Watch as our unzip online tool processes your file in real-time. All extraction happens securely in your browser.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Распакуйте онлайн</h3>
+                    <p class="text-gray-600">Наблюдайте, как наш онлайн инструмент в реальном времени обрабатывает ваш файл. Все операции распаковки выполняются безопасно в вашем браузере.</p>
                 </div>
-                
-                <div class="text-center">
+                <div class="text-center feature-card">
                     <div class="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
                         <span class="text-white text-xl font-bold">3</span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Download Files</h3>
-                    <p class="text-gray-600">Download individual files or the complete archive. Our unzip online service is completely free and secure.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Скачайте файлы</h3>
+                    <p class="text-gray-600">Скачайте отдельные файлы или всё содержимое после распаковки. Наш онлайн сервис по распаковке полностью бесплатный и безопасный.</p>
                 </div>
             </div>
         </div>
-
-        <!-- Features Section -->
+        <!-- Особенности -->
         <div class="bg-gray-50 p-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Why Choose Our Unzip Online Tool?</h2>
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Почему стоит выбрать наш онлайн инструмент для распаковки?</h2>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-white p-6 rounded-xl shadow-md file-card">
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
                     <div class="text-3xl text-primary-500 mb-4">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">100% Secure</h3>
-                    <p class="text-gray-600">All unzip online processing happens in your browser. Files never leave your device, ensuring complete privacy and security.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">100% Безопасно</h3>
+                    <p class="text-gray-600">Все операции распаковки происходят в вашем браузере, файлы не покидают ваше устройство, обеспечивая полную конфиденциальность и безопасность.</p>
                 </div>
-                
-                <div class="bg-white p-6 rounded-xl shadow-md file-card">
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
                     <div class="text-3xl text-primary-500 mb-4">
                         <i class="fas fa-bolt"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Lightning Fast</h3>
-                    <p class="text-gray-600">Extract archive files online instantly with our optimized unzip online tool. No waiting, no server delays.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Молниеносная распаковка</h3>
+                    <p class="text-gray-600">Используйте наш оптимизированный онлайн инструмент для мгновенной распаковки файлов ZIP, RAR, TAR, GZ. Без ожидания, без задержек сервера.</p>
                 </div>
-                
-                <div class="bg-white p-6 rounded-xl shadow-md file-card">
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
                     <div class="text-3xl text-primary-500 mb-4">
                         <i class="fas fa-mobile-alt"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Works Everywhere</h3>
-                    <p class="text-gray-600">Use our unzip online tool on any device - desktop, tablet, or mobile. No software installation required.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Поддержка нескольких платформ</h3>
+                    <p class="text-gray-600">Используйте наш онлайн инструмент для распаковки на любом устройстве - компьютере, планшете или телефоне. Нет необходимости устанавливать программное обеспечение.</p>
                 </div>
-                
-                <div class="bg-white p-6 rounded-xl shadow-md file-card">
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
                     <div class="text-3xl text-primary-500 mb-4">
                         <i class="fas fa-infinity"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Unlimited Use</h3>
-                    <p class="text-gray-600">Extract as many archive files online as you need. No file limits, no registration, completely free unzip online service.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Без ограничений по использованию</h3>
+                    <p class="text-gray-600">Распаковывайте любое количество архивных файлов по мере необходимости. Нет ограничений на файлы, не требуется регистрация, полностью бесплатный онлайн сервис для распаковки.</p>
                 </div>
-                
-                <div class="bg-white p-6 rounded-xl shadow-md file-card">
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
                     <div class="text-3xl text-primary-500 mb-4">
                         <i class="fas fa-file-archive"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Large File Support</h3>
-                    <p class="text-gray-600">Our unzip online tool handles large ZIP files. Perfect for extracting big archives online.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Поддержка больших файлов</h3>
+                    <p class="text-gray-600">Наш онлайн инструмент для распаковки может обрабатывать большие архивные файлы. Идеально подходит для распаковки больших архивов различных форматов.</p>
                 </div>
-                
-                <div class="bg-white p-6 rounded-xl shadow-md file-card">
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
                     <div class="text-3xl text-primary-500 mb-4">
                         <i class="fas fa-download"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Easy Downloads</h3>
-                    <p class="text-gray-600">Download individual files or the entire extracted archive. Our unzip online tool makes file management simple.</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Удобное скачивание</h3>
+                    <p class="text-gray-600">Скачивайте отдельные файлы или весь распакованный архив. Наш онлайн инструмент для распаковки делает управление файлами простым.</p>
                 </div>
             </div>
         </div>
-
-        <!-- Benefits Section -->
+        <!-- Преимущества использования -->
         <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-8">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Benefits of Using Unzip Online</h2>
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Преимущества использования онлайн инструмента для распаковки</h2>
             <div class="grid md:grid-cols-2 gap-8">
                 <div>
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Privacy & Security</h3>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Конфиденциальность и безопасность</h3>
                     <ul class="space-y-3 text-gray-700">
                         <li class="flex items-start">
                             <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span>No file uploads to external servers</span>
+                            <span>Нет необходимости загружать файлы на внешние сервера</span>
                         </li>
                         <li class="flex items-start">
                             <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span>All processing happens locally in your browser</span>
+                            <span>Вся обработка происходит локально в браузере</span>
                         </li>
                         <li class="flex items-start">
                             <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span>No registration or personal information required</span>
+                            <span>Нет необходимости регистрироваться или предоставлять личную информацию</span>
                         </li>
                         <li class="flex items-start">
                             <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span>Files are automatically deleted after processing</span>
+                            <span>Файлы автоматически удаляются после обработки</span>
                         </li>
                     </ul>
                 </div>
-                
                 <div>
-                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Convenience & Speed</h3>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Удобство и скорость</h3>
                     <ul class="space-y-3 text-gray-700">
                         <li class="flex items-start">
                             <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span>Instant unzip online without waiting</span>
+                            <span>Мгновенная распаковка, без ожидания</span>
                         </li>
                         <li class="flex items-start">
                             <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span>Works on any device with a web browser</span>
+                            <span>Можно использовать на любом устройстве с браузером</span>
                         </li>
                         <li class="flex items-start">
                             <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span>No software installation required</span>
+                            <span>Нет необходимости устанавливать программное обеспечение</span>
                         </li>
                         <li class="flex items-start">
                             <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
-                            <span>Supports large archive files</span>
+                            <span>Поддерживает большие архивные файлы</span>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
-        
-        <!-- FAQ Section -->
+        <!-- Часто задаваемые вопросы -->
         <div class="p-8 bg-white">
-            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Frequently Asked Questions</h2>
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Часто задаваемые вопросы</h2>
             <div class="max-w-4xl mx-auto space-y-6">
-                <!-- FAQ Item 1 -->
-                <div class="bg-gray-50 rounded-lg p-6 group">
+                <!-- FAQ 1 -->
+                <div class="bg-gray-50 rounded-lg p-6 group file-card">
                     <details class="group">
                         <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
-                            <h3 class="text-lg font-semibold text-gray-800">How does the unzip online tool work?</h3>
+                            <h3 class="text-lg font-semibold text-gray-800">Как работает онлайн инструмент для распаковки?</h3>
                             <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
                         </summary>
                         <div class="mt-4 text-gray-600">
-                            <p>Our unzip online tool uses advanced JavaScript libraries to process ZIP, 7Z, RAR and TAR files directly in your browser. When you upload an archive file, it's read locally and extracted using client-side technology. This means your files never leave your device, ensuring complete privacy and security. The extraction process happens entirely in your browser, making it one of the safest ways to unzip files online.</p>
+                            <p>Наш онлайн инструмент для распаковки использует передовые библиотеки JavaScript для обработки файлов ZIP, RAR, TAR и GZ прямо в вашем браузере. Когда вы загружаете архивный файл, он считывается локально и распаковывается с использованием клиентских технологий. Это означает, что ваши файлы никогда не покидают ваше устройство, обеспечивая полную конфиденциальность и безопасность. Процесс распаковки полностью происходит в вашем браузере, что делает его одним из самых безопасных способов распаковки файлов.</p>
                         </div>
                     </details>
                 </div>
-                
-                <!-- FAQ Item 2 -->
-                <div class="bg-gray-50 rounded-lg p-6 group">
+                <!-- FAQ 2 -->
+                <div class="bg-gray-50 rounded-lg p-6 group file-card">
                     <details class="group">
                         <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
-                            <h3 class="text-lg font-semibold text-gray-800">Is it safe to use unzip online tools?</h3>
+                            <h3 class="text-lg font-semibold text-gray-800">Безопасно ли использовать онлайн инструмент для распаковки?</h3>
                             <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
                         </summary>
                         <div class="mt-4 text-gray-600">
-                            <p>Yes, our unzip online tool is completely safe to use. Unlike traditional online ZIP extractors that upload your files to servers, our tool processes everything locally in your browser. This means:</p>
+                            <p>Да, наш онлайн инструмент для распаковки полностью безопасен. В отличие от традиционных онлайн распаковщиков, которые загружают файлы на сервер, наш инструмент обрабатывает всё локально на вашем устройстве. Это означает:</p>
                             <ul class="list-disc list-inside mt-2 space-y-1">
-                                <li>Your files never leave your device</li>
-                                <li>No data is stored on external servers</li>
-                                <li>No registration or personal information required</li>
-                                <li>Files are automatically deleted after processing</li>
+                                <li>Ваши файлы никогда не покидают ваше устройство</li>
+                                <li>Данные не хранятся на внешних серверах</li>
+                                <li>Нет необходимости регистрироваться или предоставлять личную информацию</li>
+                                <li>Файлы автоматически удаляются после обработки</li>
                             </ul>
                         </div>
                     </details>
                 </div>
-                
-                <!-- FAQ Item 3 -->
-                <div class="bg-gray-50 rounded-lg p-6 group">
+                <!-- FAQ 3 -->
+                <div class="bg-gray-50 rounded-lg p-6 group file-card">
                     <details class="group">
                         <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
-                            <h3 class="text-lg font-semibold text-gray-800">What file types can I extract with unzip online?</h3>
+                            <h3 class="text-lg font-semibold text-gray-800">Какие типы файлов поддерживает онлайн инструмент для распаковки?</h3>
                             <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
                         </summary>
                         <div class="mt-4 text-gray-600">
-                            <p>Our unzip online tool supports all standard archive formats including ZIP, 7Z, RAR and TAR. You can extract various file types including:</p>
+                            <p>Наш онлайн инструмент для распаковки поддерживает все стандартные форматы архивных файлов, включая ZIP, RAR, TAR и GZ. Вы можете распаковать различные типы файлов, в том числе:</p>
                             <ul class="list-disc list-inside mt-2 space-y-1">
-                                <li>Documents (PDF, DOC, DOCX, TXT)</li>
-                                <li>Images (JPG, PNG, GIF, BMP)</li>
-                                <li>Videos (MP4, AVI, MOV)</li>
-                                <li>Audio files (MP3, WAV, FLAC)</li>
-                                <li>And many more file types</li>
+                                <li>Документы (PDF, DOC, DOCX, TXT)</li>
+                                <li>Изображения (JPG, PNG, GIF, BMP)</li>
+                                <li>Видео (MP4, AVI, MOV)</li>
+                                <li>Аудио файлы (MP3, WAV, FLAC)</li>
+                                <li>Другие архивные файлы и т.д.</li>
+                                <li>И многие другие типы файлов</li>
                             </ul>
                         </div>
                     </details>
                 </div>
-                
-                <!-- FAQ Item 4 -->
-                <div class="bg-gray-50 rounded-lg p-6 group">
+                <!-- FAQ 4 -->
+                <div class="bg-gray-50 rounded-lg p-6 group file-card">
                     <details class="group">
                         <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
-                            <h3 class="text-lg font-semibold text-gray-800">What is the maximum file size for unzip online?</h3>
+                            <h3 class="text-lg font-semibold text-gray-800">Каков максимальный размер файла, поддерживаемый онлайн инструментом для распаковки?</h3>
                             <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
                         </summary>
                         <div class="mt-4 text-gray-600">
-                            <p>Our unzip online tool supports archive files up to 200MB. This limit ensures optimal performance and browser compatibility. For larger files, we recommend using desktop software or splitting the archive into smaller parts.</p>
-                        </div>
-                    </details>
-                </div>
-                
-                <!-- FAQ Item 5 -->
-                <div class="bg-gray-50 rounded-lg p-6 group">
-                    <details class="group">
-                        <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
-                            <h3 class="text-lg font-semibold text-gray-800">Do I need to register to use unzip online?</h3>
-                            <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
-                        </summary>
-                        <div class="mt-4 text-gray-600">
-                            <p>No registration is required to use our unzip online tool. You can start extracting archive files immediately without creating an account or providing any personal information. This makes our service completely anonymous and convenient for quick file extraction needs.</p>
+                            <p>Наш онлайн инструмент для распаковки поддерживает различные большие архивные файлы. Это ограничение обеспечивает наилучшую производительность и совместимость с браузерами. Для файлов большего размера мы рекомендуем использовать настольное программное обеспечение или разделить архив на более мелкие части.</p>
                         </div>
                     </details>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Footer -->
+    <!-- Подвал -->
     <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white">
         <div class="max-w-7xl mx-auto px-4 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <!-- Company Info -->
+                <!-- Информация о компании -->
                 <div class="col-span-1 md:col-span-2">
                     <div class="flex items-center mb-4">
                         <i class="fas fa-file-archive text-2xl text-primary-400 mr-3"></i>
-                        <h3 class="text-xl font-bold">Unzip Online</h3>
+                        <h3 class="text-xl font-bold">Онлайн инструмент для распаковки</h3>
                     </div>
                     <p class="text-gray-300 mb-4">
-                        Secure, fast, and convenient online archive file extraction tool. All file processing happens in your browser to protect your privacy and security.
+                        Безопасный, быстрый и удобный онлайн инструмент для распаковки ZIP файлов. Вся обработка файлов происходит в вашем браузере для защиты вашей конфиденциальности и безопасности.
                     </p>
                     <div class="flex space-x-4">
                         <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">
-                            <i class="fab fa-twitter text-xl"></i>
+                            <i class="fab fa-weixin text-xl"></i>
                         </a>
                         <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">
-                            <i class="fab fa-github text-xl"></i>
+                            <i class="fab fa-qq text-xl"></i>
                         </a>
                         <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">
-                            <i class="fab fa-linkedin text-xl"></i>
+                            <i class="fab fa-weibo text-xl"></i>
                         </a>
                     </div>
                 </div>
-                
-                <!-- Quick Links -->
+                <!-- Быстрые ссылки -->
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <h4 class="text-lg font-semibold mb-4">Быстрые ссылки</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Home</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">About Us</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Help Guide</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Главная</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">О нас</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Руководство</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Политика конфиденциальности</a></li>
                     </ul>
                 </div>
-                
-                <!-- Support -->
+                <!-- Поддержка -->
                 <div>
-                    <h4 class="text-lg font-semibold mb-4">Support</h4>
+                    <h4 class="text-lg font-semibold mb-4">Служба поддержки</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">FAQ</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Contact Us</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Feedback</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">API Docs</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Часто задаваемые вопросы</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Связаться с нами</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Обратная связь</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Документация API</a></li>
                     </ul>
                 </div>
             </div>
-            
             <div class="flex space-x-4 flex-wrap justify-center items-center t-12 my-6">
                 <span><a href="https://unziponline.org/">English</a></span><span><a href="https://unziponline.org/zh/">简体中文</a></span>
                 <span><a href="https://unziponline.org/vi/">Tiếng Việt</a></span><span><a href="https://unziponline.org/es/">Español</a></span>
                 <span><a href="https://unziponline.org/ru/">Русский</a></span>
             </div>
-
-            <!-- Bottom Bar -->
+            <!-- Информация внизу -->
             <div class="border-t border-gray-700 pt-8">
                 <div class="flex flex-col md:flex-row justify-between items-center">
                     <div class="text-gray-300 text-sm mb-4 md:mb-0">
-                        <p>© 2025 Unzip Online Tool. All rights reserved.</p>
-                        <p class="mt-1">Note: All file processing happens in your browser and is not uploaded to servers</p>
+                        <p>© 2025 Онлайн инструмент для распаковки. Все права защищены.</p>
+                        <p class="mt-1">Примечание: Вся обработка файлов происходит в вашем браузере, файлы не загружаются на сервер</p>
                     </div>
                     <div class="flex space-x-6 text-sm">
-                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Privacy Policy</a>
-                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Terms of Service</a>
-                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Cookie Policy</a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Политика конфиденциальности</a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Условия обслуживания</a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Политика Cookie</a>
                     </div>
                 </div>
             </div>
         </div>
     </footer>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const dropArea = document.getElementById('dropArea');
@@ -531,75 +497,59 @@
             const statusText = document.getElementById('statusText');
             const fileCount = document.getElementById('fileCount');
             const uploadStatus = document.getElementById('uploadStatus');
-            
             let extractedFiles = [];
-            
-            // 点击按钮触发文件选择
+            // Нажатие кнопки для выбора файла
             selectFileBtn.addEventListener('click', () => {
                 fileInput.click();
             });
-            
-            // 文件选择变化
+            // Изменение выбора файла
             fileInput.addEventListener('change', handleFileSelect);
-            
-            // 拖放事件处理
+            // Обработка событий перетаскивания
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
                 dropArea.addEventListener(eventName, preventDefaults, false);
             });
-            
             function preventDefaults(e) {
                 e.preventDefault();
                 e.stopPropagation();
             }
-            
             ['dragenter', 'dragover'].forEach(eventName => {
                 dropArea.addEventListener(eventName, highlight, false);
             });
-            
             ['dragleave', 'drop'].forEach(eventName => {
                 dropArea.addEventListener(eventName, unhighlight, false);
             });
-            
             function highlight() {
                 dropArea.classList.add('bg-primary-100', 'border-primary-600');
-                uploadStatus.textContent = "Release files to upload";
+                uploadStatus.textContent = "Отпустите мышь для загрузки файла";
                 uploadStatus.className = "mt-4 text-sm text-primary-600";
             }
-            
             function unhighlight() {
                 dropArea.classList.remove('bg-primary-100', 'border-primary-600');
                 uploadStatus.textContent = "";
                 uploadStatus.className = "mt-4 text-sm";
             }
-            
-            // 处理文件拖放
+            // Обработка перетаскивания файла
             dropArea.addEventListener('drop', handleDrop, false);
-            
             function handleDrop(e) {
                 const dt = e.dataTransfer;
                 const files = dt.files;
-                
                 if (files.length) {
                     handleFiles(files);
                 }
             }
-            
-            // 处理文件选择
+            // Обработка выбора файла
             function handleFileSelect(e) {
                 const files = e.target.files;
                 if (files.length) {
                     handleFiles(files);
                 }
             }
-            
-            // 处理文件
+            // Обработка файлов
             function handleFiles(files) {
                 const file = files[0];
-                
-                // 获取文件扩展名
+                // Получить расширение файла
                 let extension = file.name.split('.').pop().toLowerCase();
-                
-                // 检查文件类型并处理复合扩展名
+                // Проверить тип файла и обработать составные расширения
                 if (file.name.toLowerCase().endsWith('.tar.gz')) {
                     extension = 'tar';
                 } else if (file.name.toLowerCase().endsWith('.tar.bz2')) {
@@ -607,47 +557,37 @@
                 } else if (file.name.toLowerCase().endsWith('.tar.xz')) {
                     extension = 'tar';
                 }
-                
                 const allowedExtensions = ['zip', 'rar', 'tar', 'gz'];
                 if (!allowedExtensions.includes(extension)) {
-                    showStatus('Error: Please select a ZIP, RAR, TAR or GZ file!', 'error');
-                    uploadStatus.textContent = "Error: Please select a supported archive file!";
+                    showStatus('Ошибка: Пожалуйста, выберите файл ZIP, RAR, TAR или GZ!', 'error');
+                    uploadStatus.textContent = "Ошибка: Пожалуйста, выберите поддерживаемый формат архивного файла!";
                     uploadStatus.className = "mt-4 text-sm text-red-500";
                     return;
                 }
-                
-                // 检查文件大小（最大200MB）
+                // Проверить размер файла (максимум 200MB)
                 if (file.size > 200 * 1024 * 1024) {
-                    showStatus('Error: File too large! Maximum 200MB supported.', 'error');
-                    uploadStatus.textContent = "Error: File too large! Maximum 200MB supported.";
+                    showStatus('Ошибка: Файл слишком большой! Максимально поддерживаемый размер 200MB.', 'error');
+                    uploadStatus.textContent = "Ошибка: Файл слишком большой! Максимально поддерживаемый размер 200MB.";
                     uploadStatus.className = "mt-4 text-sm text-red-500";
                     return;
                 }
-                
-                uploadStatus.textContent = `Selected: ${file.name} (${formatFileSize(file.size)})`;
+                uploadStatus.textContent = `Выбрано: ${file.name} (${formatFileSize(file.size)})`;
                 uploadStatus.className = "mt-4 text-sm text-green-600";
-                
-                // 开始处理文件
-                showStatus(`Processing ${extension.toUpperCase()} file...`);
+                // Начать обработку файла
+                showStatus(`Обработка файла ${extension.toUpperCase()}...`);
                 progressContainer.classList.remove('hidden');
-                
-                // 使用FileReader读取文件
+                // Использовать FileReader для чтения файла
                 const reader = new FileReader();
-                
                 reader.onload = async function(e) {
                     const data = e.target.result;
-                    
                     try {
-                        // 显示处理进度
+                        // Показать прогресс обработки
                         updateProgress(20);
-                        showStatus('Reading archive file...');
-                        
-                        // 根据文件格式选择不同的解压方法
+                        showStatus('Чтение архивного файла...');
+                        // Выбрать метод распаковки в зависимости от формата файла
                         updateProgress(40);
-                        showStatus('Opening archive...');
-                        
+                        showStatus('Открытие архивного файла...');
                         extractedFiles = [];
-                        
                         if (extension === 'zip') {
                             await extractZip(data);
                         } else if (extension === 'rar') {
@@ -657,54 +597,44 @@
                         } else if (extension === 'gz') {
                             await extractGz(data, file.name);
                         } else {
-                            throw new Error('Unsupported archive format: ' + extension);
+                            throw new Error('Неподдерживаемый формат архивного файла: ' + extension);
                         }
-                        
-                        // 更新UI
+                        // Обновить пользовательский интерфейс
                         updateProgress(100);
-                        showStatus('Extraction complete!');
+                        showStatus('Распаковка завершена!');
                         downloadAllBtn.disabled = false;
-                        
-                        // 显示文件列表
+                        // Показать список файлов
                         fileListContent.innerHTML = '';
                         extractedFiles.forEach((file, index) => {
                             addFileToList(file, index+1);
                         });
                         fileList.classList.remove('hidden');
-                        fileCount.textContent = `${extractedFiles.length} files`;
-                        
+                        fileCount.textContent = `${extractedFiles.length} файлов`;
                     } catch (error) {
-                        console.error('Extraction error:', error);
-                        
-                        // 提供更详细的错误信息
-                        let errorMessage = 'Failed to extract archive';
+                        console.error('Ошибка распаковки:', error);
+                        // Предоставить более подробную информацию об ошибке
+                        let errorMessage = 'Распаковка не удалась';
                         if (extension === 'rar') {
-                            errorMessage = 'RAR extraction failed. This could be due to: encryption, newer RAR format, or corrupted file.';
+                            errorMessage = 'Распаковка RAR не удалась. Возможные причины: файл зашифрован, новый формат RAR или повреждённый файл.';
                         } else {
-                            errorMessage = error.message || 'Unknown extraction error';
+                            errorMessage = error.message || 'Неизвестная ошибка распаковки';
                         }
-                        
-                        showStatus('Error: ' + errorMessage, 'error');
-                        uploadStatus.textContent = "Error: " + errorMessage;
+                        showStatus('Ошибка: ' + errorMessage, 'error');
+                        uploadStatus.textContent = "Ошибка: " + errorMessage;
                         uploadStatus.className = "mt-4 text-sm text-red-500";
                     }
                 };
-                
                 reader.onerror = function() {
-                    showStatus('Error reading file', 'error');
+                    showStatus('Ошибка при чтении файла', 'error');
                 };
-                
                 reader.readAsArrayBuffer(file);
             }
-            
-            // ZIP文件解压函数
+            // Функция распаковки ZIP файлов
             async function extractZip(data) {
                 updateProgress(50);
-                showStatus('Extracting ZIP files...');
-                
+                showStatus('Распаковка ZIP файла...');
                 const zip = new JSZip();
                 const zipContent = await zip.loadAsync(data);
-                
                 const filePromises = [];
                 zipContent.forEach((relativePath, zipEntry) => {
                     if (!zipEntry.dir) {
@@ -721,46 +651,39 @@
                         );
                     }
                 });
-                
                 await Promise.all(filePromises);
                 updateProgress(90);
             }
-            
-            // RAR文件解压函数
+            // Функция распаковки RAR файлов
             async function extractRar(data, fileName) {
                 updateProgress(50);
-                showStatus('Extracting RAR files...');
-                
+                showStatus('Распаковка RAR файла...');
                 try {
                     await extractWithUnarchiver(data, fileName);
                     updateProgress(90);
                 } catch (error) {
-                    console.error('RAR extraction failed:', error);
-                    throw new Error('Failed to extract RAR file. RAR files may require specific versions or may be encrypted. Error: ' + error.message);
+                    console.error('Ошибка распаковки RAR:', error);
+                    throw new Error('Не удалось распаковать RAR файл. Файл RAR может требовать определённой версии или быть зашифрованным. Ошибка: ' + error.message);
                 }
             }
-            
-            // TAR文件解压函数
+            // Функция распаковки TAR файлов
             async function extractTar(data) {
                 updateProgress(50);
-                showStatus('Extracting TAR files...');
-                
+                showStatus('Распаковка TAR файла...');
                 try {
-                    // 检查untar库是否可用
+                    // Проверить доступность библиотеки untar
                     if (typeof untar === 'undefined') {
-                        throw new Error('TAR library not loaded');
+                        throw new Error('Библиотека TAR не загружена');
                     }
-                    
                     const files = await untar(data);
-                    
                     files.forEach(file => {
                         if (file.buffer && file.buffer.byteLength > 0 && file.name && !file.name.endsWith('/')) {
                             extractedFiles.push({
                                 name: file.name,
                                 size: file.size || file.buffer.byteLength,
                                 type: getMimeType(file.name.split('.').pop().toLowerCase()),
-                                content: new File([file.buffer], file.name.split('/').pop(), { 
-                                    type: getMimeType(file.name.split('.').pop().toLowerCase()) 
+                                content: new File([file.buffer], file.name.split('/').pop(), {
+                                    type: getMimeType(file.name.split('.').pop().toLowerCase())
                                 }),
                                 lastModified: file.mtime ? new Date(file.mtime * 1000) : new Date()
                             });
@@ -768,80 +691,63 @@
                     });
                     updateProgress(90);
                 } catch (error) {
-                    console.warn('js-untar failed, trying unarchiver.js...', error);
+                    console.warn('js-untar не удался, пробуем unarchiver.js...', error);
                     await extractWithUnarchiver(data, 'archive.tar');
                 }
             }
-            
-
-            // GZ文件解压函数
+            // Функция распаковки GZ файлов
             async function extractGz(data, fileName) {
                 updateProgress(50);
-                showStatus('Extracting GZ files...');
-                
+                showStatus('Распаковка GZ файла...');
                 try {
-                    // 使用pako库解压gzip
+                    // Использовать библиотеку pako для распаковки gzip
                     const decompressed = pako.inflate(new Uint8Array(data));
-                    
-                    // 去掉.gz扩展名得到原始文件名
+                    // Убрать расширение .gz, чтобы получить оригинальное имя файла
                     const originalName = fileName.replace(/\.gz$/i, '');
-                    
                     extractedFiles.push({
                         name: originalName,
                         size: decompressed.byteLength,
                         type: getMimeType(originalName.split('.').pop().toLowerCase()),
-                        content: new File([decompressed], originalName, { 
-                            type: getMimeType(originalName.split('.').pop().toLowerCase()) 
+                        content: new File([decompressed], originalName, {
+                            type: getMimeType(originalName.split('.').pop().toLowerCase())
                         }),
                         lastModified: new Date()
                     });
                     updateProgress(90);
                 } catch (error) {
-                    console.warn('Pako failed, trying unarchiver.js...', error);
+                    console.warn('Pako не удался, пробуем unarchiver.js...', error);
                     await extractWithUnarchiver(data, fileName);
                 }
             }
-            
-
-            // 使用unarchiver.js进行解压
+            // Распаковка с использованием unarchiver.js
             async function extractWithUnarchiver(data, fileName) {
                 updateProgress(60);
-                showStatus('Extracting with universal extractor...');
-                
+                showStatus('Распаковка универсальным распаковщиком...');
                 try {
-                    // 检查Unarchiver是否可用
+                    // Проверить доступность Unarchiver
                     if (typeof Unarchiver === 'undefined') {
-                        throw new Error('Unarchiver library not loaded');
+                        throw new Error('Библиотека Unarchiver не загружена');
                     }
-                    
-                    console.log('Attempting to extract with Unarchiver:', fileName);
-                    
+                    console.log('Попытка распаковки с помощью Unarchiver:', fileName);
                     const fileBlob = new Blob([data]);
-                    const archiveFile = new File([fileBlob], fileName, { 
+                    const archiveFile = new File([fileBlob], fileName, {
                         type: getArchiveMimeType(fileName)
                     });
-                    
-                    console.log('Created file object:', archiveFile.name, archiveFile.size, archiveFile.type);
-                    
-                    // 尝试打开压缩文件
+                    console.log('Создание объекта файла:', archiveFile.name, archiveFile.size, archiveFile.type);
+                    // Попытаться открыть архивный файл
                     const archive = await Unarchiver.open(archiveFile);
-                    console.log('Archive opened successfully:', archive);
-                    
+                    console.log('Архивный файл успешно открыт:', archive);
                     if (!archive.entries || archive.entries.length === 0) {
-                        throw new Error('No entries found in archive');
+                        throw new Error('В архивном файле не найдено записей');
                     }
-                    
-                    console.log('Found entries:', archive.entries.length);
-                    
-                    // 提取文件
+                    console.log('Найдено записей:', archive.entries.length);
+                    // Извлечь файлы
                     for (let entry of archive.entries) {
-                        console.log('Processing entry:', entry.name, 'is_file:', entry.is_file);
-                        
+                        console.log('Обработка записи:', entry.name, 'это файл:', entry.is_file);
                         if (entry.is_file && entry.name && entry.name.trim() !== '') {
                             try {
                                 const entryFile = await entry.read();
-                                console.log('Successfully read entry:', entry.name, entryFile.size);
-                                
+                                console.log('Успешно прочитана запись:', entry.name, entryFile.size);
                                 extractedFiles.push({
                                     name: entry.name,
                                     size: entry.size_uncompressed || entryFile.size,
@@ -850,24 +756,21 @@
                                     lastModified: new Date()
                                 });
                             } catch (entryError) {
-                                console.warn('Failed to read entry:', entry.name, entryError);
+                                console.warn('Ошибка чтения записи:', entry.name, entryError);
                             }
                         }
                     }
-                    
                     if (extractedFiles.length === 0) {
-                        throw new Error('No valid files could be extracted from the archive');
+                        throw new Error('Не удалось извлечь какие-либо действительные файлы из архива');
                     }
-                    
                     updateProgress(90);
-                    console.log('Successfully extracted', extractedFiles.length, 'files');
+                    console.log('Успешно распаковано', extractedFiles.length, 'файлов');
                 } catch (error) {
-                    console.error('Unarchiver extraction failed:', error);
+                    console.error('Ошибка распаковки Unarchiver:', error);
                     throw error;
                 }
             }
-            
-            // 获取压缩文件的MIME类型
+            // Получить MIME-тип архивного файла
             function getArchiveMimeType(fileName) {
                 const extension = fileName.split('.').pop().toLowerCase();
                 const mimeTypes = {
@@ -878,8 +781,7 @@
                 };
                 return mimeTypes[extension] || 'application/octet-stream';
             }
-            
-            // 获取MIME类型
+            // Получить MIME-тип
             function getMimeType(extension) {
                 const types = {
                     'jpg': 'image/jpeg',
@@ -899,49 +801,42 @@
                     '7z': 'application/x-7z-compressed',
                     'tar': 'application/x-tar'
                 };
-                
                 return types[extension] || 'application/octet-stream';
             }
-            
-            // 添加文件到列表
+            // Добавить файл в список
             function addFileToList(file, index) {
                 const fileItem = document.createElement('div');
                 fileItem.className = 'flex items-center p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200';
-                
-                // 获取文件图标
+                // Получить иконку файла
                 const icon = getFileIcon(file.name);
-                
                 fileItem.innerHTML = `
                     <div class="w-10 text-2xl text-primary-500 text-center mr-4">${icon}</div>
                     <div class="flex-1 min-w-0">
                         <div class="font-medium truncate">${file.name}</div>
                         <div class="flex text-sm text-gray-500 mt-1">
                             <span class="mr-4">${formatFileSize(file.size)}</span>
-                            <span>${file.name.split('.').pop().toUpperCase()} file</span>
+                            <span>${getFileType(file.name)}</span>
                         </div>
                     </div>
                     <div class="flex gap-2">
                         <button class="bg-primary-500 text-white px-4 py-2 rounded text-sm hover:bg-primary-600 transition-colors duration-200 flex items-center gap-2 download-btn" data-index="${index - 1}">
-                            <i class="fas fa-download"></i> Download
+                            <i class="fas fa-download"></i> Скачать
                         </button>
                     </div>
                 `;
-                
                 fileListContent.appendChild(fileItem);
                 fileList.classList.remove('hidden');
-                
-                // 添加下载事件监听器
+                // Добавить обработчик события для скачивания
                 const downloadBtn = fileItem.querySelector('.download-btn');
                 downloadBtn.addEventListener('click', function() {
                     const idx = parseInt(this.getAttribute('data-index'));
                     downloadFile(extractedFiles[idx]);
                 });
             }
-            
-            // 下载单个文件
+            // Скачать один файл
             function downloadFile(file) {
-                showStatus(`Downloading: ${file.name}...`);
-                // 使用File对象直接下载
+                showStatus(`Скачивание: ${file.name}...`);
+                // Использовать объект File для прямого скачивания
                 const url = URL.createObjectURL(file.content);
                 const a = document.createElement('a');
                 a.href = url;
@@ -951,34 +846,28 @@
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
                 setTimeout(() => {
-                    showStatus(`Download complete: ${file.name}`);
+                    showStatus(`Скачивание завершено: ${file.name}`);
                 }, 1000);
             }
-            
-            // 下载全部文件
+            // Скачать все файлы
             downloadAllBtn.addEventListener('click', function() {
                 if (extractedFiles.length === 0) return;
-                
-                showStatus('Packaging all files...');
+                showStatus('Упаковка всех файлов...');
                 downloadAllBtn.disabled = true;
-                
-                // 创建新的ZIP文件
+                // Создать новый ZIP файл
                 const zip = new JSZip();
-                
-                // 添加所有文件到新ZIP
+                // Добавить все файлы в новый ZIP
                 extractedFiles.forEach(file => {
                     zip.file(file.name, file.content);
                 });
-                
-                // 模拟打包过程
+                // Симулировать процесс упаковки
                 let progress = 0;
                 const interval = setInterval(() => {
                     progress += 5;
                     if (progress > 95) progress = 95;
                     updateProgress(progress);
                 }, 100);
-                
-                // 生成ZIP文件
+                // Сгенерировать ZIP файл
                 zip.generateAsync({type: 'blob'}, function(metadata) {
                     progressBar.style.width = metadata.percent.toFixed(2) + '%';
                     progressText.textContent = metadata.percent.toFixed(2) + '%';
@@ -986,70 +875,57 @@
                 .then(function(content) {
                     clearInterval(interval);
                     updateProgress(100);
-                    
-                    // 下载ZIP文件
+                    // Скачать ZIP файл
                     const url = URL.createObjectURL(content);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = 'extracted-files.zip';
+                    a.download = 'Распакованные_файлы.zip';
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
                     URL.revokeObjectURL(url);
-                    
-                    showStatus('Packaging complete! Files downloaded.');
+                    showStatus('Упаковка завершена! Файл скачан.');
                     downloadAllBtn.disabled = false;
                 });
             });
-            
-            // 重置按钮
+            // Кнопка сброса
             resetBtn.addEventListener('click', function() {
-                // 重置所有状态
+                // Сбросить все состояния
                 fileInput.value = '';
                 extractedFiles = [];
-                
                 fileList.classList.add('hidden');
                 progressContainer.classList.add('hidden');
                 uploadStatus.textContent = '';
                 uploadStatus.className = "mt-4 text-sm";
-                
                 progressBar.style.width = '0%';
                 progressBar.classList.remove('progress-pulse');
                 progressText.textContent = '0%';
-                
                 downloadAllBtn.disabled = true;
-                
-                // 重置文件列表
+                // Сбросить список файлов
                 fileListContent.innerHTML = `
                     <div class="text-center py-12 text-gray-500">
                         <i class="fas fa-inbox text-5xl mb-4 text-gray-300"></i>
-                        <p>Extracted files will appear here</p>
+                        <p>Здесь будут отображаться распакованные файлы</p>
                     </div>
                 `;
-                
-                fileCount.textContent = '0 files';
-                
-                showStatus('Ready to extract files...');
+                fileCount.textContent = '0 файлов';
+                showStatus('Готов к распаковке файла...');
             });
-            
-            // 辅助函数：更新进度条
+            // Вспомогательная функция: обновить индикатор выполнения
             function updateProgress(percent) {
                 progressBar.style.width = percent + '%';
                 progressText.textContent = Math.round(percent) + '%';
                 progressBar.classList.add('progress-pulse');
             }
-            
-            // 辅助函数：显示状态信息
+            // Вспомогательная функция: показать статус
             function showStatus(message, type = 'info') {
                 statusText.classList.remove('hidden');
                 statusText.textContent = message;
                 statusText.className = `text-center py-4 text-lg font-medium ${type === 'error' ? 'text-red-500' : 'text-primary-600'}`;
             }
-            
-            // 辅助函数：获取文件图标
+            // Вспомогательная функция: получить иконку файла
             function getFileIcon(filename) {
                 const ext = filename.split('.').pop().toLowerCase();
-                
                 if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(ext)) {
                     return '<i class="fas fa-image"></i>';
                 }
@@ -1082,12 +958,16 @@
                 }
                 return '<i class="fas fa-file"></i>';
             }
-            
-            // 辅助函数：格式化文件大小
+            // Вспомогательная функция: получить тип файла
+            function getFileType(filename) {
+                const ext = filename.split('.').pop().toLowerCase();
+                return ext.toUpperCase() + ' файл';
+            }
+            // Вспомогательная функция: форматировать размер файла
             function formatFileSize(bytes) {
-                if (bytes === 0) return '0 Bytes';
+                if (bytes === 0) return '0 байт';
                 const k = 1024;
-                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const sizes = ['байт', 'KB', 'MB', 'GB'];
                 const i = Math.floor(Math.log(bytes) / Math.log(k));
                 return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
             }
