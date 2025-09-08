@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unzip 7z Online - Free 7z Extractor Tool</title>
+    <meta name="description" content="Extract and open 7z files online for free. Our tool instantly unpacks 7z archives directly in your browser. No installation needed—100% free and secure.">
+    
+    <link rel="canonical" href="https://unziponline.org/unzip-7z-online" />
+    <link rel="icon" href="icon.png" type="image/x-icon" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        accent: '#F59E0B',
+                        dark: '#1E293B',
+                        light: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .transition-custom {
+                transition: all 0.3s ease;
+            }
+            .hover-lift {
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+            .hover-lift:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+            .action-button {
+                @apply bg-primary hover:bg-primary/90 text-white font-semibold py-4 px-10 rounded-lg cursor-pointer transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-1;
+            }
+            .secondary-button {
+                @apply bg-secondary hover:bg-secondary/90 text-white font-semibold py-4 px-10 rounded-lg cursor-pointer transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-1;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gradient-from to-gradient-to">
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-lg shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-file-archive text-2xl text-primary-600 mr-3"></i>
+                        <a href="/" class="text-2xl font-bold">Unzip Online</a>
+                    </div>
+                </div>
+                
+                <!-- Right side -->
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="https://unziponline.org/unzip-7z-online" target="_blank" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">unzip 7z</a>
+                            <a href="https://unziponline.org/unzip-tar-gz" target="_blank" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">unzip tar gz</a>
+                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">About</a>
+                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Help</a>
+                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section class="bg-gradient-to-br from-blue-50 to-indigo-50 py-16 md:py-24">
+            <div class="container mx-auto px-4">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold text-dark leading-tight mb-6 text-shadow">
+                        Unzip 7z Online Without Installation
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-600 mb-10">
+                        Easily unzip 7z files and other compressed formats directly in your browser. Unzip 7z online securely and quickly, protecting your privacy every step of the way.
+                    </p>
+                    
+                    <!-- Upload Area -->
+                    <div class="bg-white rounded-xl shadow-lg p-8 border-2 border-dashed border-gray-200 hover:border-primary transition-custom mb-8 hover-lift">
+                        <a href="unzip-7z">
+                            <div class="flex flex-col items-center">
+                            <i class="fa fa-cloud-upload text-5xl text-primary mb-4"></i>
+                            <label for="fileUpload" class="action-button">
+                                <i class="fa fa-file-o mr-2"></i> Start Unzip 7z Online
+                            </label>
+                            <button type="button" id="fileUpload" class="hidden" accept=".zip,.7z,.rar,.tar,.gz,.bz2,.xz">
+                        </div>
+                        </a>
+                    </div>
+                    
+                
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-dark mb-16">Why Choose Our Tool to Unzip 7z Online</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="bg-gray-50 rounded-xl p-6 shadow-sm hover-lift">
+                        <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                            <i class="fa fa-shield text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-dark">Secure & Reliable</h3>
+                        <p class="text-gray-600">All processing to unzip 7z files happens in your browser. No files are uploaded to servers, keeping your data private and secure.</p>
+                    </div>
+                    
+                    <!-- Feature 2 -->
+                    <div class="bg-gray-50 rounded-xl p-6 shadow-sm hover-lift">
+                        <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                            <i class="fa fa-bolt text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-dark">Fast & Efficient</h3>
+                        <p class="text-gray-600">No waiting for uploads or downloads. Unzip 7z online directly on your device, saving time and bandwidth.</p>
+                    </div>
+                    
+                    <!-- Feature 3 -->
+                    <div class="bg-gray-50 rounded-xl p-6 shadow-sm hover-lift">
+                        <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                            <i class="fa fa-code-fork text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-dark">Multiple Formats</h3>
+                        <p class="text-gray-600">While you can unzip 7z online with our tool, we also support ZIP, RAR, TAR, GZ and many other compression formats.</p>
+                    </div>
+                    
+                    <!-- Feature 4 -->
+                    <div class="bg-gray-50 rounded-xl p-6 shadow-sm hover-lift">
+                        <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                            <i class="fa fa-laptop text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-dark">Cross-Platform</h3>
+                        <p class="text-gray-600">Use our tool to unzip 7z online on any device with a modern browser. No additional software installation required.</p>
+                    </div>
+                    
+                    <!-- Feature 5 -->
+                    <div class="bg-gray-50 rounded-xl p-6 shadow-sm hover-lift">
+                        <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                            <i class="fa fa-lock text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-dark">Privacy Focused</h3>
+                        <p class="text-gray-600">Files never leave your device when you unzip 7z online with our service, ensuring sensitive information remains protected.</p>
+                    </div>
+                    
+                    <!-- Feature 6 -->
+                    <div class="bg-gray-50 rounded-xl p-6 shadow-sm hover-lift">
+                        <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                            <i class="fa fa-gift text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-dark">Completely Free</h3>
+                        <p class="text-gray-600">All features to unzip 7z online are available at no cost, with no hidden fees or paywalls to access basic functionality.</p>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-12">
+                    <a href="unzip-7z" class="action-button inline-block">
+                        Try Unzipping Now <i class="fa fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Supported Formats -->
+        <section id="formats" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-dark mb-4">Supported Compression Formats</h2>
+                <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">While you can unzip 7z online with our tool, we support many common compressed file formats, eliminating the need for multiple extraction programs</p>
+                
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 max-w-5xl mx-auto">
+                    <!-- Format 1 -->
+                    <div class="bg-white rounded-lg p-6 text-center shadow-sm hover-lift">
+                        <i class="fa fa-file-zip-o text-4xl text-primary mb-3"></i>
+                        <p class="font-medium">ZIP</p>
+                    </div>
+                    
+                    <!-- Format 2 -->
+                    <div class="bg-white rounded-lg p-6 text-center shadow-sm hover-lift">
+                        <i class="fa fa-file-archive-o text-4xl text-primary mb-3"></i>
+                        <p class="font-medium">7Z</p>
+                    </div>
+                    
+                    <!-- Format 3 -->
+                    <div class="bg-white rounded-lg p-6 text-center shadow-sm hover-lift">
+                        <i class="fa fa-file-archive-o text-4xl text-primary mb-3"></i>
+                        <p class="font-medium">RAR</p>
+                    </div>
+                    
+                    <!-- Format 4 -->
+                    <div class="bg-white rounded-lg p-6 text-center shadow-sm hover-lift">
+                        <i class="fa fa-file-archive-o text-4xl text-primary mb-3"></i>
+                        <p class="font-medium">TAR</p>
+                    </div>
+                    
+                    <!-- Format 5 -->
+                    <div class="bg-white rounded-lg p-6 text-center shadow-sm hover-lift">
+                        <i class="fa fa-file-archive-o text-4xl text-primary mb-3"></i>
+                        <p class="font-medium">GZ</p>
+                    </div>
+                    
+                    <!-- Format 6 -->
+                    <div class="bg-white rounded-lg p-6 text-center shadow-sm hover-lift">
+                        <i class="fa fa-file-archive-o text-4xl text-primary mb-3"></i>
+                        <p class="font-medium">BZ2</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Usage Steps -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-dark mb-16">Three Simple Steps to Unzip 7z Online</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                    <!-- Step 1 -->
+                    <div class="text-center relative">
+                        <div class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 z-10 relative">1</div>
+                        <div class="hidden md:block absolute top-8 left-1/2 w-full h-1 bg-gray-200 -z-10"></div>
+                        <h3 class="text-xl font-bold mb-3 text-dark">Select Your File</h3>
+                        <p class="text-gray-600">Click the upload button or drag and drop your 7z file into the upload area</p>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="text-center relative">
+                        <div class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 z-10 relative">2</div>
+                        <div class="hidden md:block absolute top-8 left-1/2 w-full h-1 bg-gray-200 -z-10"></div>
+                        <h3 class="text-xl font-bold mb-3 text-dark">Wait for Processing</h3>
+                        <p class="text-gray-600">Our tool will automatically unzip 7z file locally without uploading to servers</p>
+                    </div>
+                    
+                    <!-- Step 3 -->
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">3</div>
+                        <h3 class="text-xl font-bold mb-3 text-dark">Download Files</h3>
+                        <p class="text-gray-600">View the list of extracted files and choose which ones you want to download</p>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-12">
+                    <a href="#" class="action-button inline-block">
+                        Start Unzipping <i class="fa fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-dark mb-16">Frequently Asked Questions</h2>
+                
+                <div class="max-w-3xl mx-auto space-y-6">
+                    <!-- Question 1 -->
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                        <button class="faq-toggle w-full text-left p-6 focus:outline-none flex justify-between items-center">
+                            <span class="font-medium text-lg">Will my files be uploaded to servers when I unzip 7z online?</span>
+                            <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content hidden px-6 pb-6">
+                            <p class="text-gray-600">No. All processing to unzip 7z files happens directly in your browser. Files never leave your device, ensuring your privacy and security.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 2 -->
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                        <button class="faq-toggle w-full text-left p-6 focus:outline-none flex justify-between items-center">
+                            <span class="font-medium text-lg">What's the maximum file size I can process to unzip 7z online?</span>
+                            <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content hidden px-6 pb-6">
+                            <p class="text-gray-600">Our online tool supports 7z files up to 200MB in size. Larger files may take longer to process and are limited by your device's memory.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 3 -->
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                        <button class="faq-toggle w-full text-left p-6 focus:outline-none flex justify-between items-center">
+                            <span class="font-medium text-lg">Can I unzip 7z files that are password protected?</span>
+                            <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content hidden px-6 pb-6">
+                            <p class="text-gray-600">Yes, our tool supports extracting password-protected 7z files. When you upload a protected file, you'll be prompted to enter the password to continue.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 4 -->
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                        <button class="faq-toggle w-full text-left p-6 focus:outline-none flex justify-between items-center">
+                            <span class="font-medium text-lg">Can I use this tool to unzip 7z online on mobile devices?</span>
+                            <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content hidden px-6 pb-6">
+                            <p class="text-gray-600">Absolutely. Our 7z extraction tool is fully responsive and works on mobile phones, tablets, and desktop computers with the same functionality.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 5 -->
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                        <button class="faq-toggle w-full text-left p-6 focus:outline-none flex justify-between items-center">
+                            <span class="font-medium text-lg">Is it free to unzip 7z online with this tool?</span>
+                            <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content hidden px-6 pb-6">
+                            <p class="text-gray-600">Yes, our service to unzip 7z online is completely free to use with no hidden costs or limitations on basic functionality.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-16 bg-primary/5">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-dark mb-6">Ready to Unzip 7z Online?</h2>
+                <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">Experience our fast, secure tool to unzip 7z online without installing any software on your device</p>
+                <a href="unzip-7z" class="action-button text-lg py-5 px-12">
+                    Unzip 7z Now <i class="fa fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-file-archive text-2xl text-primary-400 mr-3"></i>
+                        <span class="text-xl font-bold">Unzip Online</span>
+                    </div>
+                    <p class="text-gray-300 mb-4">
+                        Secure, fast, and convenient online archive file extraction tool. All file processing happens in your browser to protect your privacy and security.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="https://histre.com/@xiaoqiu2017wy/notes/" target="_blank" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">histre</a></li>
+                        <li><a href="https://checkcosmetic.online/" target="_blank" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">check cosmetic</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Help Guide</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Support -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">FAQ</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Feedback</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">API Docs</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="flex space-x-4 flex-wrap justify-center items-center t-12 my-6">
+                <span><a href="https://unziponline.org/">English</a></span><span><a href="https://unziponline.org/zh/">简体中文</a></span>
+                <span><a href="https://unziponline.org/vi/">Tiếng Việt</a></span><span><a href="https://unziponline.org/es/">Español</a></span>
+                <span><a href="https://unziponline.org/ru/">Русский</a></span>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-700 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="text-gray-300 text-sm mb-4 md:mb-0">
+                        <p>© 2025 Unzip Online Tool. All rights reserved.</p>
+                        <p class="mt-1">Note: All file processing happens in your browser and is not uploaded to servers</p>
+                    </div>
+                    <div class="flex space-x-6 text-sm">
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Privacy Policy</a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Terms of Service</a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    document.getElementById('mobileMenu').classList.add('hidden');
+                }
+            });
+        });
+
+        // FAQ toggle functionality
+        document.querySelectorAll('.faq-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                const icon = this.querySelector('i');
+                
+                content.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('py-2');
+                header.classList.remove('py-4');
+                header.classList.add('shadow');
+            } else {
+                header.classList.add('py-4');
+                header.classList.remove('py-2');
+                header.classList.remove('shadow');
+            }
+        });
+
+        // File upload handling
+        const fileUpload = document.getElementById('fileUpload');
+        const uploadArea = document.querySelector('.border-dashed');
+        const processingStatus = document.getElementById('processingStatus');
+        const resultArea = document.getElementById('resultArea');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const fileNameElement = document.getElementById('fileName');
+        const fileListElement = document.getElementById('fileList');
+        const downloadAllBtn = document.getElementById('downloadAllBtn');
+
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.classList.add('border-primary');
+            uploadArea.classList.add('bg-primary/5');
+        });
+
+        uploadArea.addEventListener('dragleave', function() {
+            uploadArea.classList.remove('border-primary');
+            uploadArea.classList.remove('bg-primary/5');
+        });
+
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('border-primary');
+            uploadArea.classList.remove('bg-primary/5');
+            
+            if (e.dataTransfer.files.length) {
+                fileUpload.files = e.dataTransfer.files;
+                handleFileUpload(fileUpload.files[0]);
+            }
+        });
+
+        // File selection
+        fileUpload.addEventListener('change', function() {
+            if (this.files.length) {
+                handleFileUpload(this.files[0]);
+            }
+        });
+
+        // Handle file upload
+        function handleFileUpload(file) {
+            // Show processing status
+            uploadArea.classList.add('hidden');
+            processingStatus.classList.remove('hidden');
+            
+            // Update file name
+            fileNameElement.textContent = file.name;
+            
+            // Simulate progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    // Show results after progress completes
+                    setTimeout(() => {
+                        processingStatus.classList.add('hidden');
+                        resultArea.classList.remove('hidden');
+                        generateFileList();
+                    }, 500);
+                }
+                
+                progressBar.style.width = `${progress}%`;
+                progressText.textContent = `${Math.round(progress)}%`;
+            }, 300);
+        }
+
+        // Generate simulated file list
+        function generateFileList() {
+            fileListElement.innerHTML = '';
+            
+            const files = [
+                { name: 'document.pdf', size: '2.4MB', type: 'pdf' },
+                { name: 'image.jpg', size: '1.8MB', type: 'image' },
+                { name: 'data.csv', size: '450KB', type: 'csv' },
+                { name: 'presentation.pptx', size: '8.7MB', type: 'ppt' },
+                { name: 'folder/', size: '', type: 'folder' }
+            ];
+            
+            files.forEach(file => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'flex justify-between items-center py-2 border-b last:border-0 border-gray-200';
+                
+                let iconClass = 'fa-file-o';
+                if (file.type === 'pdf') iconClass = 'fa-file-pdf-o text-red-500';
+                else if (file.type === 'image') iconClass = 'fa-file-image-o text-green-500';
+                else if (file.type === 'csv') iconClass = 'fa-file-excel-o text-blue-500';
+                else if (file.type === 'ppt') iconClass = 'fa-file-powerpoint-o text-orange-500';
+                else if (file.type === 'folder') iconClass = 'fa-folder text-yellow-500';
+                
+                fileItem.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fa ${iconClass} mr-3"></i>
+                        <span>${file.name}</span>
+                    </div>
+                    <div class="flex items-center">
+                        ${file.size ? `<span class="text-gray-500 text-sm mr-4">${file.size}</span>` : ''}
+                        <button class="text-primary hover:text-primary/80 transition-custom">
+                            <i class="fa fa-download"></i>
+                        </button>
+                    </div>
+                `;
+                
+                fileListElement.appendChild(fileItem);
+            });
+        }
+
+        // Download all files button
+        downloadAllBtn.addEventListener('click', function() {
+            alert('Preparing all files for download...');
+            // In a real implementation, this would handle file packaging and download
+        });
+    </script>
+</body>
+</html>
+    
