@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Распаковать Файлы Онлайн — Бесплатный Распаковщик Архивов</title>
+    <meta name="description" content="Распакуйте ZIP, RAR, TAR и GZ файлы онлайн в браузере. Откройте архив, посмотрите его содержимое и скачайте извлечённые файлы без установки программ.">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+    <!-- Библиотека для поддержки различных форматов распаковки -->
+    <script src="https://xenova.github.io/unarchiver.js/dist/unarchiver.min.js"></script>
+    <script src="https://unziponline.org/js/tailwindcss.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4158779929727637"
+           crossOrigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-4158779929727637">
+    <!-- Поддержка TAR файлов -->
+    <!-- Лучшая поддержка RAR -->
+    <script>
+        // Предварительная загрузка поддержки форматов unarchiver.js
+        window.addEventListener('load', function() {
+            if (typeof Unarchiver !== 'undefined' && Unarchiver.load) {
+                console.log('Загрузка поддержки форматов Unarchiver...');
+                Unarchiver.load(['zip', 'rar', 'tar'])
+                    .then(() => console.log('Форматы Unarchiver успешно загружены'))
+                    .catch(error => console.warn('Не удалось загрузить некоторые форматы Unarchiver:', error));
+            } else {
+                // Если метод Unarchiver.load отсутствует, попробуйте загрузить с задержкой
+                setTimeout(() => {
+                    if (typeof Unarchiver !== 'undefined' && Unarchiver.load) {
+                        console.log('Отложенная загрузка поддержки форматов Unarchiver...');
+                        Unarchiver.load(['zip', 'rar', 'tar'])
+                            .then(() => console.log('Форматы Unarchiver успешно загружены (отложено)'))
+                            .catch(error => console.warn('Не удалось загрузить некоторые форматы Unarchiver (отложено):', error));
+                    }
+                }, 2000);
+            }
+        });
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="canonical" href="https://unziponline.org/ru/uncompress-file" />
+    <link rel="icon" href="icon.png" type="image/x-icon" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-186D48K68L"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-186D48K68L');
+    </script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        },
+                        gradient: {
+                            from: '#1a2980',
+                            to: '#26d0ce',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        .file-card {
+            transition: all 0.3s ease;
+        }
+        .file-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .feature-card {
+            transition: transform 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .glow-on-hover {
+            transition: box-shadow 0.3s ease;
+        }
+        .glow-on-hover:hover {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+        .format-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #1d4ed8;
+            border-radius: 50px;
+            padding: 4px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            margin: 0 4px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .format-badge i {
+            margin-right: 5px;
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .progress-pulse {
+            animation: pulse 2s infinite;
+        }
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gradient-from to-gradient-to">
+    <!-- Навигационная панель -->
+    <nav class="bg-white/95 backdrop-blur-lg shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Логотип сайта -->
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-file-archive text-2xl text-primary-600 mr-3"></i>
+                        <a href="#" class="text-2xl font-bold">Unzip Online</a>
+                    </div>
+                </div>
+                <!-- Правая навигация -->
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">О нас</a>
+                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Центр помощи</a>
+                            <a href="#" class="text-gray-500 hover:text-primary-500 px-3 py-2 rounded-md text-sm font-medium">Связаться с нами</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Основной контент -->
+    <div class="flex justify-center items-center p-5 min-h-screen">
+        <div class="w-full max-w-4xl bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden">
+            <!-- Заголовок -->
+            <header class="bg-gradient-to-r from-primary-600 to-blue-400 text-white p-8 text-center">
+                <h1 class="text-4xl font-bold mb-3">
+                    <i class="fas fa-file-archive mr-3"></i>Распаковать файлы онлайн
+                </h1>
+                <p class="text-lg opacity-90">Открывайте ZIP, RAR, TAR и GZ архивы прямо в браузере</p>
+                <div class="mt-4 flex justify-center flex-wrap">
+                    <span class="format-badge text-white"><i class="fas fa-file-archive"></i>ZIP</span>
+                    <span class="format-badge text-white"><i class="fas fa-file-archive"></i>RAR</span>
+                    <span class="format-badge text-white"><i class="fas fa-file-archive"></i>TAR</span>
+                    <span class="format-badge text-white"><i class="fas fa-file-archive"></i>GZ</span>
+                </div>
+            </header>
+            <!-- Область контента -->
+            <div class="p-8">
+                <!-- Область загрузки файлов -->
+                <div id="dropArea" class="border-3 border-dashed border-primary-500 rounded-2xl p-10 text-center bg-primary-50/50 transition-all duration-300 mb-8 hover:bg-primary-50 hover:-translate-y-1 glow-on-hover">
+                    <div class="text-6xl text-primary-500 mb-4 floating">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h2 class="text-2xl font-semibold text-primary-600 mb-4">Выберите файл для распаковки</h2>
+                    <p class="mb-5 text-gray-600">Перетащите архив сюда или выберите ZIP, RAR, TAR либо GZ файл.</p>
+                    <button id="selectFileBtn" class="bg-gradient-to-r from-primary-500 to-blue-400 text-white px-8 py-3 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 active:translate-y-0">
+                        <i class="fas fa-folder-open mr-2"></i>Выбрать архивный файл
+                    </button>
+                    <input type="file" id="fileInput" accept=".zip,.rar,.tar,.gz" class="hidden">
+                    <div id="uploadStatus" class="mt-4 text-sm"></div>
+                </div>
+                <!-- Индикатор выполнения -->
+                <div id="progressContainer" class="mb-8 hidden">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="font-semibold text-primary-600">Прогресс распаковки</span>
+                        <span id="progressText" class="font-semibold text-primary-600">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-5 overflow-hidden">
+                        <div id="progressBar" class="bg-gradient-to-r from-primary-500 to-blue-400 h-full rounded-full transition-all duration-300 progress-pulse" style="width: 0%"></div>
+                    </div>
+                </div>
+                <!-- Статус -->
+                <div id="statusText" class="text-center py-4 text-lg font-medium text-primary-600">
+                    Готов к распаковке файла...
+                </div>
+                <!-- Список файлов -->
+                <div id="fileList" class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8 hidden">
+                    <div class="bg-gradient-to-r from-primary-500 to-blue-400 text-white p-4 flex justify-between items-center">
+                        <div class="font-semibold">Распакованные файлы</div>
+                        <div id="fileCount" class="bg-white/20 px-3 py-1 rounded-full text-sm">0 файлов</div>
+                    </div>
+                    <div id="fileListContent" class="max-h-80 overflow-y-auto">
+                        <div class="text-center py-12 text-gray-500">
+                            <i class="fas fa-inbox text-5xl mb-4 text-gray-300"></i>
+                            <p>Здесь будут отображаться распакованные файлы</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Кнопки действий -->
+                <div class="flex justify-center gap-5">
+                    <button id="downloadAllBtn" disabled class="bg-gradient-to-r from-green-500 to-green-400 text-white px-8 py-3 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                        <i class="fas fa-download mr-2"></i>Скачать все файлы
+                    </button>
+                    <button id="resetBtn" class="bg-gradient-to-r from-red-500 to-red-400 text-white px-8 py-3 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 active:translate-y-0">
+                        <i class="fas fa-redo mr-2"></i>Сбросить
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bg-gray-50 my-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Руководство по использованию -->
+        <div class="p-8">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Как распаковать файл онлайн</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center feature-card">
+                    <div class="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-xl font-bold">1</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Выберите архив</h3>
+                    <p class="text-gray-600">Перетащите ZIP, RAR, TAR или GZ архив либо используйте выбор файла на устройстве.</p>
+                </div>
+                <div class="text-center feature-card">
+                    <div class="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-xl font-bold">2</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Распакуйте в браузере</h3>
+                    <p class="text-gray-600">Инструмент локально читает архив и показывает файлы внутри него. Устанавливать программу не нужно.</p>
+                </div>
+                <div class="text-center feature-card">
+                    <div class="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-white text-xl font-bold">3</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Скачайте файлы</h3>
+                    <p class="text-gray-600">Скачайте отдельный извлечённый файл или все доступные файлы вместе.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Особенности -->
+        <div class="bg-gray-50 p-8">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Простой способ распаковать файлы</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
+                    <div class="text-3xl text-primary-500 mb-4">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Обработка в браузере</h3>
+                    <p class="text-gray-600">Архив обрабатывается в браузере и не отправляется на сервер этого сайта для извлечения файлов.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
+                    <div class="text-3xl text-primary-500 mb-4">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Молниеносная распаковка</h3>
+                    <p class="text-gray-600">Используйте наш оптимизированный онлайн инструмент для мгновенной распаковки файлов ZIP, RAR, TAR, GZ. Без ожидания, без задержек сервера.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
+                    <div class="text-3xl text-primary-500 mb-4">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Поддержка нескольких платформ</h3>
+                    <p class="text-gray-600">Используйте наш онлайн инструмент для распаковки на любом устройстве - компьютере, планшете или телефоне. Нет необходимости устанавливать программное обеспечение.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
+                    <div class="text-3xl text-primary-500 mb-4">
+                        <i class="fas fa-infinity"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Без ограничений по использованию</h3>
+                    <p class="text-gray-600">Распаковывайте любое количество архивных файлов по мере необходимости. Нет ограничений на файлы, не требуется регистрация, полностью бесплатный онлайн сервис для распаковки.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
+                    <div class="text-3xl text-primary-500 mb-4">
+                        <i class="fas fa-file-archive"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Поддержка больших файлов</h3>
+                    <p class="text-gray-600">Наш онлайн инструмент для распаковки может обрабатывать большие архивные файлы. Идеально подходит для распаковки больших архивов различных форматов.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md feature-card">
+                    <div class="text-3xl text-primary-500 mb-4">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Удобное скачивание</h3>
+                    <p class="text-gray-600">Скачивайте отдельные файлы или весь распакованный архив. Наш онлайн инструмент для распаковки делает управление файлами простым.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Преимущества использования -->
+        <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-8">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Зачем использовать онлайн-распаковщик файлов?</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Конфиденциальность и безопасность</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span>Нет необходимости загружать файлы на внешние сервера</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span>Вся обработка происходит локально в браузере</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span>Нет необходимости регистрироваться или предоставлять личную информацию</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span>Закройте или обновите страницу, когда закончите работу</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Удобство и скорость</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span>Мгновенная распаковка, без ожидания</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span>Можно использовать на любом устройстве с браузером</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span>Нет необходимости устанавливать программное обеспечение</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-3"></i>
+                            <span>Поддерживает большие архивные файлы</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Часто задаваемые вопросы -->
+        <div class="p-8 bg-white">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Часто задаваемые вопросы</h2>
+            <div class="max-w-4xl mx-auto space-y-6">
+                <!-- FAQ 1 -->
+                <div class="bg-gray-50 rounded-lg p-6 group file-card">
+                    <details class="group">
+                        <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
+                            <h3 class="text-lg font-semibold text-gray-800">Как распаковать файл онлайн?</h3>
+                            <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
+                        </summary>
+                        <div class="mt-4 text-gray-600">
+                            <p>Выберите или перетащите архив в область загрузки. Инструмент читает поддерживаемый файл в браузере, показывает его содержимое и позволяет скачать извлечённые файлы. Поддерживаются ZIP, RAR, TAR и GZ.</p>
+                        </div>
+                    </details>
+                </div>
+                <!-- FAQ 2 -->
+                <div class="bg-gray-50 rounded-lg p-6 group file-card">
+                    <details class="group">
+                        <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
+                            <h3 class="text-lg font-semibold text-gray-800">Загружаются ли файлы на сервер?</h3>
+                            <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
+                        </summary>
+                        <div class="mt-4 text-gray-600">
+                            <p>Инструмент предназначен для локальной обработки архивов в браузере. Архив не загружается на сервер этого сайта для распаковки. Открывайте файлы из неизвестных источников с осторожностью.</p>
+                            <ul class="list-disc list-inside mt-2 space-y-1">
+                                <li>Ваши файлы никогда не покидают ваше устройство</li>
+                                <li>Данные не хранятся на внешних серверах</li>
+                                <li>Нет необходимости регистрироваться или предоставлять личную информацию</li>
+                                <li>Файлы автоматически удаляются после обработки</li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+                <!-- FAQ 3 -->
+                <div class="bg-gray-50 rounded-lg p-6 group file-card">
+                    <details class="group">
+                        <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
+                            <h3 class="text-lg font-semibold text-gray-800">Какие форматы можно распаковать?</h3>
+                            <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
+                        </summary>
+                        <div class="mt-4 text-gray-600">
+                            <p>Можно распаковать ZIP, RAR, TAR и GZ файлы. В архиве могут быть документы, изображения, аудио, видео и другие файлы; инструмент извлекает содержимое, а не конвертирует его.</p>
+                            <ul class="list-disc list-inside mt-2 space-y-1">
+                                <li>Документы (PDF, DOC, DOCX, TXT)</li>
+                                <li>Изображения (JPG, PNG, GIF, BMP)</li>
+                                <li>Видео (MP4, AVI, MOV)</li>
+                                <li>Аудио файлы (MP3, WAV, FLAC)</li>
+                                <li>Другие архивные файлы и т.д.</li>
+                                <li>И многие другие типы файлов</li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+                <!-- FAQ 4 -->
+                <div class="bg-gray-50 rounded-lg p-6 group file-card">
+                    <details class="group">
+                        <summary class="w-full text-left flex justify-between items-center cursor-pointer list-none">
+                            <h3 class="text-lg font-semibold text-gray-800">Есть ли ограничение на размер файла?</h3>
+                            <i class="fas fa-chevron-down text-primary-500 transition-transform duration-300 group-open:rotate-180"></i>
+                        </summary>
+                        <div class="mt-4 text-gray-600">
+                            <p>Поддерживаются архивы размером до 200 МБ. На работу также влияют память браузера и размер распакованного содержимого. Для более крупных архивов используйте настольную программу или разделите архив на части.</p>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Подвал -->
+    <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Информация о компании -->
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-file-archive text-2xl text-primary-400 mr-3"></i>
+                        <h3 class="text-xl font-bold">Онлайн инструмент для распаковки</h3>
+                    </div>
+                    <p class="text-gray-300 mb-4">
+                        Безопасный, быстрый и удобный онлайн инструмент для распаковки ZIP файлов. Вся обработка файлов происходит в вашем браузере для защиты вашей конфиденциальности и безопасности.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">
+                            <i class="fab fa-weixin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">
+                            <i class="fab fa-qq text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">
+                            <i class="fab fa-weibo text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- Быстрые ссылки -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Быстрые ссылки</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Главная</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">О нас</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Руководство</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Политика конфиденциальности</a></li>
+                    </ul>
+                </div>
+                <!-- Поддержка -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Служба поддержки</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Часто задаваемые вопросы</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Связаться с нами</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Обратная связь</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Документация API</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="flex space-x-4 flex-wrap justify-center items-center t-12 my-6">
+                <span><a href="https://unziponline.org/">English</a></span><span><a href="https://unziponline.org/zh/">简体中文</a></span>
+                <span><a href="https://unziponline.org/vi/">Tiếng Việt</a></span><span><a href="https://unziponline.org/es/">Español</a></span>
+                <span><a href="https://unziponline.org/ru/">Русский</a></span>
+            </div>
+            <!-- Информация внизу -->
+            <div class="border-t border-gray-700 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="text-gray-300 text-sm mb-4 md:mb-0">
+                        <p>© 2025 Онлайн инструмент для распаковки. Все права защищены.</p>
+                        <p class="mt-1">Примечание: Вся обработка файлов происходит в вашем браузере, файлы не загружаются на сервер</p>
+                    </div>
+                    <div class="flex space-x-6 text-sm">
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Политика конфиденциальности</a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Условия обслуживания</a>
+                        <a href="#" class="text-gray-300 hover:text-primary-400 transition-colors duration-200">Политика Cookie</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <iframe src="https://unziponline.org/adsterra.html" width="100%" frameborder="0"></iframe>
+
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropArea = document.getElementById('dropArea');
+            const fileInput = document.getElementById('fileInput');
+            const selectFileBtn = document.getElementById('selectFileBtn');
+            const fileList = document.getElementById('fileList');
+            const fileListContent = document.getElementById('fileListContent');
+            const downloadAllBtn = document.getElementById('downloadAllBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const statusText = document.getElementById('statusText');
+            const fileCount = document.getElementById('fileCount');
+            const uploadStatus = document.getElementById('uploadStatus');
+            let extractedFiles = [];
+            // Нажатие кнопки для выбора файла
+            selectFileBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+            // Изменение выбора файла
+            fileInput.addEventListener('change', handleFileSelect);
+            // Обработка событий перетаскивания
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+            function highlight() {
+                dropArea.classList.add('bg-primary-100', 'border-primary-600');
+                uploadStatus.textContent = "Отпустите мышь для загрузки файла";
+                uploadStatus.className = "mt-4 text-sm text-primary-600";
+            }
+            function unhighlight() {
+                dropArea.classList.remove('bg-primary-100', 'border-primary-600');
+                uploadStatus.textContent = "";
+                uploadStatus.className = "mt-4 text-sm";
+            }
+            // Обработка перетаскивания файла
+            dropArea.addEventListener('drop', handleDrop, false);
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if (files.length) {
+                    handleFiles(files);
+                }
+            }
+            // Обработка выбора файла
+            function handleFileSelect(e) {
+                const files = e.target.files;
+                if (files.length) {
+                    handleFiles(files);
+                }
+            }
+            // Обработка файлов
+            function handleFiles(files) {
+                const file = files[0];
+                // Получить расширение файла
+                let extension = file.name.split('.').pop().toLowerCase();
+                // Проверить тип файла и обработать составные расширения
+                if (file.name.toLowerCase().endsWith('.tar.gz')) {
+                    extension = 'tar';
+                } else if (file.name.toLowerCase().endsWith('.tar.bz2')) {
+                    extension = 'tar';
+                } else if (file.name.toLowerCase().endsWith('.tar.xz')) {
+                    extension = 'tar';
+                }
+                const allowedExtensions = ['zip', 'rar', 'tar', 'gz'];
+                if (!allowedExtensions.includes(extension)) {
+                    showStatus('Ошибка: Пожалуйста, выберите файл ZIP, RAR, TAR или GZ!', 'error');
+                    uploadStatus.textContent = "Ошибка: Пожалуйста, выберите поддерживаемый формат архивного файла!";
+                    uploadStatus.className = "mt-4 text-sm text-red-500";
+                    return;
+                }
+                // Проверить размер файла (максимум 200MB)
+                if (file.size > 200 * 1024 * 1024) {
+                    showStatus('Ошибка: Файл слишком большой! Максимально поддерживаемый размер 200MB.', 'error');
+                    uploadStatus.textContent = "Ошибка: Файл слишком большой! Максимально поддерживаемый размер 200MB.";
+                    uploadStatus.className = "mt-4 text-sm text-red-500";
+                    return;
+                }
+                uploadStatus.textContent = `Выбрано: ${file.name} (${formatFileSize(file.size)})`;
+                uploadStatus.className = "mt-4 text-sm text-green-600";
+                // Начать обработку файла
+                showStatus(`Обработка файла ${extension.toUpperCase()}...`);
+                progressContainer.classList.remove('hidden');
+                // Использовать FileReader для чтения файла
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    const data = e.target.result;
+                    try {
+                        // Показать прогресс обработки
+                        updateProgress(20);
+                        showStatus('Чтение архивного файла...');
+                        // Выбрать метод распаковки в зависимости от формата файла
+                        updateProgress(40);
+                        showStatus('Открытие архивного файла...');
+                        extractedFiles = [];
+                        if (extension === 'zip') {
+                            await extractZip(data);
+                        } else if (extension === 'rar') {
+                            await extractRar(data, file.name);
+                        } else if (extension === 'tar') {
+                            await extractTar(data);
+                        } else if (extension === 'gz') {
+                            await extractGz(data, file.name);
+                        } else {
+                            throw new Error('Неподдерживаемый формат архивного файла: ' + extension);
+                        }
+                        // Обновить пользовательский интерфейс
+                        updateProgress(100);
+                        showStatus('Распаковка завершена!');
+                        downloadAllBtn.disabled = false;
+                        // Показать список файлов
+                        fileListContent.innerHTML = '';
+                        extractedFiles.forEach((file, index) => {
+                            addFileToList(file, index+1);
+                        });
+                        fileList.classList.remove('hidden');
+                        fileCount.textContent = `${extractedFiles.length} файлов`;
+                    } catch (error) {
+                        console.error('Ошибка распаковки:', error);
+                        // Предоставить более подробную информацию об ошибке
+                        let errorMessage = 'Распаковка не удалась';
+                        if (extension === 'rar') {
+                            errorMessage = 'Распаковка RAR не удалась. Возможные причины: файл зашифрован, новый формат RAR или повреждённый файл.';
+                        } else {
+                            errorMessage = error.message || 'Неизвестная ошибка распаковки';
+                        }
+                        showStatus('Ошибка: ' + errorMessage, 'error');
+                        uploadStatus.textContent = "Ошибка: " + errorMessage;
+                        uploadStatus.className = "mt-4 text-sm text-red-500";
+                    }
+                };
+                reader.onerror = function() {
+                    showStatus('Ошибка при чтении файла', 'error');
+                };
+                reader.readAsArrayBuffer(file);
+            }
+            // Функция распаковки ZIP файлов
+            async function extractZip(data) {
+                updateProgress(50);
+                showStatus('Распаковка ZIP файла...');
+                const zip = new JSZip();
+                const zipContent = await zip.loadAsync(data);
+                const filePromises = [];
+                zipContent.forEach((relativePath, zipEntry) => {
+                    if (!zipEntry.dir) {
+                        filePromises.push(
+                            zipEntry.async('blob').then(content => {
+                                extractedFiles.push({
+                                    name: relativePath,
+                                    size: zipEntry._data.uncompressedSize,
+                                    type: getMimeType(relativePath.split('.').pop().toLowerCase()),
+                                    content: new File([content], relativePath, { type: getMimeType(relativePath.split('.').pop().toLowerCase()) }),
+                                    lastModified: zipEntry.date || new Date()
+                                });
+                            })
+                        );
+                    }
+                });
+                await Promise.all(filePromises);
+                updateProgress(90);
+            }
+            // Функция распаковки RAR файлов
+            async function extractRar(data, fileName) {
+                updateProgress(50);
+                showStatus('Распаковка RAR файла...');
+                try {
+                    await extractWithUnarchiver(data, fileName);
+                    updateProgress(90);
+                } catch (error) {
+                    console.error('Ошибка распаковки RAR:', error);
+                    throw new Error('Не удалось распаковать RAR файл. Файл RAR может требовать определённой версии или быть зашифрованным. Ошибка: ' + error.message);
+                }
+            }
+            // Функция распаковки TAR файлов
+            async function extractTar(data) {
+                updateProgress(50);
+                showStatus('Распаковка TAR файла...');
+                try {
+                    // Проверить доступность библиотеки untar
+                    if (typeof untar === 'undefined') {
+                        throw new Error('Библиотека TAR не загружена');
+                    }
+                    const files = await untar(data);
+                    files.forEach(file => {
+                        if (file.buffer && file.buffer.byteLength > 0 && file.name && !file.name.endsWith('/')) {
+                            extractedFiles.push({
+                                name: file.name,
+                                size: file.size || file.buffer.byteLength,
+                                type: getMimeType(file.name.split('.').pop().toLowerCase()),
+                                content: new File([file.buffer], file.name.split('/').pop(), {
+                                    type: getMimeType(file.name.split('.').pop().toLowerCase())
+                                }),
+                                lastModified: file.mtime ? new Date(file.mtime * 1000) : new Date()
+                            });
+                        }
+                    });
+                    updateProgress(90);
+                } catch (error) {
+                    console.warn('js-untar не удался, пробуем unarchiver.js...', error);
+                    await extractWithUnarchiver(data, 'archive.tar');
+                }
+            }
+            // Функция распаковки GZ файлов
+            async function extractGz(data, fileName) {
+                updateProgress(50);
+                showStatus('Распаковка GZ файла...');
+                try {
+                    // Использовать библиотеку pako для распаковки gzip
+                    const decompressed = pako.inflate(new Uint8Array(data));
+                    // Убрать расширение .gz, чтобы получить оригинальное имя файла
+                    const originalName = fileName.replace(/\.gz$/i, '');
+                    extractedFiles.push({
+                        name: originalName,
+                        size: decompressed.byteLength,
+                        type: getMimeType(originalName.split('.').pop().toLowerCase()),
+                        content: new File([decompressed], originalName, {
+                            type: getMimeType(originalName.split('.').pop().toLowerCase())
+                        }),
+                        lastModified: new Date()
+                    });
+                    updateProgress(90);
+                } catch (error) {
+                    console.warn('Pako не удался, пробуем unarchiver.js...', error);
+                    await extractWithUnarchiver(data, fileName);
+                }
+            }
+            // Распаковка с использованием unarchiver.js
+            async function extractWithUnarchiver(data, fileName) {
+                updateProgress(60);
+                showStatus('Распаковка универсальным распаковщиком...');
+                try {
+                    // Проверить доступность Unarchiver
+                    if (typeof Unarchiver === 'undefined') {
+                        throw new Error('Библиотека Unarchiver не загружена');
+                    }
+                    console.log('Попытка распаковки с помощью Unarchiver:', fileName);
+                    const fileBlob = new Blob([data]);
+                    const archiveFile = new File([fileBlob], fileName, {
+                        type: getArchiveMimeType(fileName)
+                    });
+                    console.log('Создание объекта файла:', archiveFile.name, archiveFile.size, archiveFile.type);
+                    // Попытаться открыть архивный файл
+                    const archive = await Unarchiver.open(archiveFile);
+                    console.log('Архивный файл успешно открыт:', archive);
+                    if (!archive.entries || archive.entries.length === 0) {
+                        throw new Error('В архивном файле не найдено записей');
+                    }
+                    console.log('Найдено записей:', archive.entries.length);
+                    // Извлечь файлы
+                    for (let entry of archive.entries) {
+                        console.log('Обработка записи:', entry.name, 'это файл:', entry.is_file);
+                        if (entry.is_file && entry.name && entry.name.trim() !== '') {
+                            try {
+                                const entryFile = await entry.read();
+                                console.log('Успешно прочитана запись:', entry.name, entryFile.size);
+                                extractedFiles.push({
+                                    name: entry.name,
+                                    size: entry.size_uncompressed || entryFile.size,
+                                    type: entryFile.type || getMimeType(entry.name.split('.').pop().toLowerCase()),
+                                    content: entryFile,
+                                    lastModified: new Date()
+                                });
+                            } catch (entryError) {
+                                console.warn('Ошибка чтения записи:', entry.name, entryError);
+                            }
+                        }
+                    }
+                    if (extractedFiles.length === 0) {
+                        throw new Error('Не удалось извлечь какие-либо действительные файлы из архива');
+                    }
+                    updateProgress(90);
+                    console.log('Успешно распаковано', extractedFiles.length, 'файлов');
+                } catch (error) {
+                    console.error('Ошибка распаковки Unarchiver:', error);
+                    throw error;
+                }
+            }
+            // Получить MIME-тип архивного файла
+            function getArchiveMimeType(fileName) {
+                const extension = fileName.split('.').pop().toLowerCase();
+                const mimeTypes = {
+                    'zip': 'application/zip',
+                    'rar': 'application/vnd.rar',
+                    'tar': 'application/x-tar',
+                    'gz': 'application/gzip'
+                };
+                return mimeTypes[extension] || 'application/octet-stream';
+            }
+            // Получить MIME-тип
+            function getMimeType(extension) {
+                const types = {
+                    'jpg': 'image/jpeg',
+                    'jpeg': 'image/jpeg',
+                    'png': 'image/png',
+                    'gif': 'image/gif',
+                    'pdf': 'application/pdf',
+                    'doc': 'application/msword',
+                    'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    'xls': 'application/vnd.ms-excel',
+                    'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'txt': 'text/plain',
+                    'mp3': 'audio/mpeg',
+                    'mp4': 'video/mp4',
+                    'zip': 'application/zip',
+                    'rar': 'application/vnd.rar',
+                    '7z': 'application/x-7z-compressed',
+                    'tar': 'application/x-tar'
+                };
+                return types[extension] || 'application/octet-stream';
+            }
+            // Добавить файл в список
+            function addFileToList(file, index) {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'flex items-center p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200';
+                // Получить иконку файла
+                const icon = getFileIcon(file.name);
+                fileItem.innerHTML = `
+                    <div class="w-10 text-2xl text-primary-500 text-center mr-4">${icon}</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="font-medium truncate">${file.name}</div>
+                        <div class="flex text-sm text-gray-500 mt-1">
+                            <span class="mr-4">${formatFileSize(file.size)}</span>
+                            <span>${getFileType(file.name)}</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="bg-primary-500 text-white px-4 py-2 rounded text-sm hover:bg-primary-600 transition-colors duration-200 flex items-center gap-2 download-btn" data-index="${index - 1}">
+                            <i class="fas fa-download"></i> Скачать
+                        </button>
+                    </div>
+                `;
+                fileListContent.appendChild(fileItem);
+                fileList.classList.remove('hidden');
+                // Добавить обработчик события для скачивания
+                const downloadBtn = fileItem.querySelector('.download-btn');
+                downloadBtn.addEventListener('click', function() {
+                    const idx = parseInt(this.getAttribute('data-index'));
+                    downloadFile(extractedFiles[idx]);
+                });
+            }
+            // Скачать один файл
+            function downloadFile(file) {
+                showStatus(`Скачивание: ${file.name}...`);
+                // Использовать объект File для прямого скачивания
+                const url = URL.createObjectURL(file.content);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = file.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                setTimeout(() => {
+                    showStatus(`Скачивание завершено: ${file.name}`);
+                }, 1000);
+            }
+            // Скачать все файлы
+            downloadAllBtn.addEventListener('click', function() {
+                if (extractedFiles.length === 0) return;
+                showStatus('Упаковка всех файлов...');
+                downloadAllBtn.disabled = true;
+                // Создать новый ZIP файл
+                const zip = new JSZip();
+                // Добавить все файлы в новый ZIP
+                extractedFiles.forEach(file => {
+                    zip.file(file.name, file.content);
+                });
+                // Симулировать процесс упаковки
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 5;
+                    if (progress > 95) progress = 95;
+                    updateProgress(progress);
+                }, 100);
+                // Сгенерировать ZIP файл
+                zip.generateAsync({type: 'blob'}, function(metadata) {
+                    progressBar.style.width = metadata.percent.toFixed(2) + '%';
+                    progressText.textContent = metadata.percent.toFixed(2) + '%';
+                })
+                .then(function(content) {
+                    clearInterval(interval);
+                    updateProgress(100);
+                    // Скачать ZIP файл
+                    const url = URL.createObjectURL(content);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'Распакованные_файлы.zip';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    showStatus('Упаковка завершена! Файл скачан.');
+                    downloadAllBtn.disabled = false;
+                });
+            });
+            // Кнопка сброса
+            resetBtn.addEventListener('click', function() {
+                // Сбросить все состояния
+                fileInput.value = '';
+                extractedFiles = [];
+                fileList.classList.add('hidden');
+                progressContainer.classList.add('hidden');
+                uploadStatus.textContent = '';
+                uploadStatus.className = "mt-4 text-sm";
+                progressBar.style.width = '0%';
+                progressBar.classList.remove('progress-pulse');
+                progressText.textContent = '0%';
+                downloadAllBtn.disabled = true;
+                // Сбросить список файлов
+                fileListContent.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-inbox text-5xl mb-4 text-gray-300"></i>
+                        <p>Здесь будут отображаться распакованные файлы</p>
+                    </div>
+                `;
+                fileCount.textContent = '0 файлов';
+                showStatus('Готов к распаковке файла...');
+            });
+            // Вспомогательная функция: обновить индикатор выполнения
+            function updateProgress(percent) {
+                progressBar.style.width = percent + '%';
+                progressText.textContent = Math.round(percent) + '%';
+                progressBar.classList.add('progress-pulse');
+            }
+            // Вспомогательная функция: показать статус
+            function showStatus(message, type = 'info') {
+                statusText.classList.remove('hidden');
+                statusText.textContent = message;
+                statusText.className = `text-center py-4 text-lg font-medium ${type === 'error' ? 'text-red-500' : 'text-primary-600'}`;
+            }
+            // Вспомогательная функция: получить иконку файла
+            function getFileIcon(filename) {
+                const ext = filename.split('.').pop().toLowerCase();
+                if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(ext)) {
+                    return '<i class="fas fa-image"></i>';
+                }
+                if (['pdf'].includes(ext)) {
+                    return '<i class="fas fa-file-pdf"></i>';
+                }
+                if (['doc', 'docx'].includes(ext)) {
+                    return '<i class="fas fa-file-word"></i>';
+                }
+                if (['xls', 'xlsx'].includes(ext)) {
+                    return '<i class="fas fa-file-excel"></i>';
+                }
+                if (['ppt', 'pptx'].includes(ext)) {
+                    return '<i class="fas fa-file-powerpoint"></i>';
+                }
+                if (['txt', 'md', 'log'].includes(ext)) {
+                    return '<i class="fas fa-file-alt"></i>';
+                }
+                if (['zip', 'rar', '7z', 'tar', 'gz'].includes(ext)) {
+                    return '<i class="fas fa-file-archive"></i>';
+                }
+                if (['mp3', 'wav', 'flac', 'aac'].includes(ext)) {
+                    return '<i class="fas fa-file-audio"></i>';
+                }
+                if (['mp4', 'avi', 'mov', 'mkv', 'flv'].includes(ext)) {
+                    return '<i class="fas fa-file-video"></i>';
+                }
+                if (['html', 'htm', 'css', 'js', 'json'].includes(ext)) {
+                    return '<i class="fas fa-file-code"></i>';
+                }
+                return '<i class="fas fa-file"></i>';
+            }
+            // Вспомогательная функция: получить тип файла
+            function getFileType(filename) {
+                const ext = filename.split('.').pop().toLowerCase();
+                return ext.toUpperCase() + ' файл';
+            }
+            // Вспомогательная функция: форматировать размер файла
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 байт';
+                const k = 1024;
+                const sizes = ['байт', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+        });
+    </script>
+</body>
+</html>
